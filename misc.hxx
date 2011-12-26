@@ -89,6 +89,8 @@ class weapon: public item
 		SDL_Surface* texture2;
 		SDL_Surface* texture3;
 		SDL_Surface* texture4;
+
+		weapon();
 };
 
 
@@ -185,8 +187,9 @@ class player: public creature
 	public:
 		bool weapon_drawn;
 		bool inventoryFlag;
+		int keysense;
 		
-		std::vector<item> inventory;
+		std::vector<item*> inventory;
 		std::vector<ammo> quiver;
 
 		player();

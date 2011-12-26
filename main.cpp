@@ -15,7 +15,6 @@ int main(int argc, char* args[])
 	timer walkRate;
 	timer fps;
 	// TESTING BEGIN
-	/*
 	weapon testWeapon;
 	testWeapon.damage = 5;
 	testWeapon.range = 17;
@@ -23,12 +22,13 @@ int main(int argc, char* args[])
 	testWeapon.texture2 = load_image("data\\testWeapon2.bmp");
 	testWeapon.texture3 = load_image("data\\testWeapon3.bmp");
 	testWeapon.texture4 = load_image("data\\testWeapon4.bmp");
-	player1.primaryWeapon = testWeapon;
-	*/
+	// player1.primaryWeapon = testWeapon;
 	weapon testRanged;
+	testRanged.damage = 2;
+	testRanged.texture = testWeapon.texture2;
 	testRanged.ranged = true;
 	player1.primaryWeapon = testRanged;
-	for(int i=0;i<200;i++)
+	for(int i=0;i<20;i++)
 	{
 		ammo testAmmo;		
 		testAmmo.damage = 5;
@@ -39,9 +39,13 @@ int main(int argc, char* args[])
 		testAmmo.texture4 = load_image("data\\testWeapon4.bmp");
 		player1.quiver.push_back(testAmmo);
 	}
-	item testItem;
-	testItem.texture = load_image("data\\testWeapon1.bmp");
-	player1.inventory.push_back(testItem);
+	// item testItem;
+	// testItem.texture = load_image("data\\testWeapon1.bmp");
+	testWeapon.texture = testWeapon.texture1;
+	weapon *testPointer1 = &testWeapon;
+	weapon *testPointer2 = &testRanged;
+	player1.inventory.push_back(testPointer1);
+	player1.inventory.push_back(testPointer2);
 	// TESTING END
 
 

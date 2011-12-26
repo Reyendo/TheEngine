@@ -45,6 +45,10 @@ thing::thing()
 {}
 
 
+weapon::weapon()
+{}
+
+
 creature::creature()
 	: hp(0)
 	, mp(0)
@@ -79,6 +83,7 @@ enemy::enemy()
 player::player()
 	: weapon_drawn(false)
 	, inventoryFlag(false)
+	, keysense(0)
 {creature();}
 
 
@@ -662,7 +667,12 @@ bool player::handleInput(Uint8 *keystates)
 
 	if(keystates[SDLK_SPACE])
 	{
-		weapon_drawn = true;
+		if(keysense > 10)
+		{
+			weapon_drawn = true;
+			keysense = 0;
+		}
+		keysense++;
 	}
 
 	if(keystates[SDLK_i])
@@ -820,38 +830,40 @@ void player::draw_weapon(map &map1, window &mainWindow)
 		}
 	}else
 	{
-		switch(direction)
-		{
-			case 1:
-				quiver.back().x = x;
-				quiver.back().y = y+h;
-				quiver.back().yVel = PLAYERVELOCITY*2;
-				map1.projectiles.push_back(quiver.back());
-				quiver.pop_back();
-				break;
-			case 2:
-				quiver.back().x = x+w;
-				quiver.back().y = y;
-				quiver.back().xVel = PLAYERVELOCITY*2;
-				map1.projectiles.push_back(quiver.back());			
-				quiver.pop_back();
-				break;
-			case 3:
-				quiver.back().x = x;
-				quiver.back().y = y-quiver.back().h;
-				quiver.back().yVel = -PLAYERVELOCITY*2;
-				map1.projectiles.push_back(quiver.back());			
-				quiver.pop_back();
-				break;
-			case 4:
-				quiver.back().x = x-quiver.back().w;
-				quiver.back().y = y;
-				quiver.back().xVel = -PLAYERVELOCITY*2;
-				map1.projectiles.push_back(quiver.back());			
-				quiver.pop_back();
-				break;
-			default:
-				break;
+		if(quiver.size()>0){
+			switch(direction)
+			{
+				case 1:
+					quiver.back().x = x;
+					quiver.back().y = y+h;
+					quiver.back().yVel = PLAYERVELOCITY*2;
+					map1.projectiles.push_back(quiver.back());
+					quiver.pop_back();
+					break;
+				case 2:
+					quiver.back().x = x+w;
+					quiver.back().y = y;
+					quiver.back().xVel = PLAYERVELOCITY*2;
+					map1.projectiles.push_back(quiver.back());
+					quiver.pop_back();
+					break;
+				case 3:
+					quiver.back().x = x;
+					quiver.back().y = y-quiver.back().h;
+					quiver.back().yVel = -PLAYERVELOCITY*2;
+					map1.projectiles.push_back(quiver.back());
+					quiver.pop_back();
+					break;
+				case 4:
+					quiver.back().x = x-quiver.back().w;
+					quiver.back().y = y;
+					quiver.back().xVel = -PLAYERVELOCITY*2;
+					map1.projectiles.push_back(quiver.back());
+					quiver.pop_back();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 }
@@ -859,10 +871,17 @@ void player::draw_weapon(map &map1, window &mainWindow)
 
 void player::checkInventory(window &mainWindow)
 {
+	int j = 0;
 	inventoryFlag = false;
 	SDL_Event event;
+	tile select;
+	select.x = 0;
+	select.y = 0;
+	select.w = 32;
+	select.h = 32;
+	select.texture = load_image("data\\outline.bmp");
 	timer fps;
-	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255, 255, 255);	
+	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255, 255, 255);
 
 	bool quit(false);
 	while(!quit)
@@ -880,27 +899,46 @@ void player::checkInventory(window &mainWindow)
 		Uint8 *keystates = SDL_GetKeyState(NULL);
 		if(keystates[SDLK_q])
 		{quit=true;}
+		else if(keystates[SDLK_UP]) // FIX CODE HERE; ADD J MODIFIER
+		{
+			select.y -= SPRITEHEIGHT*2;
+			if(select.y<0){select.y+=SPRITEHEIGHT*2;}
+		}else if(keystates[SDLK_DOWN]) // HERE TOO
+		{
+			select.y += SPRITEHEIGHT*2;
+			if(select.y+select.h>SCREENHEIGHT){select.y-=SPRITEHEIGHT*2;}
+		}else if(keystates[SDLK_RIGHT])
+		{
+			j += 1;
+			select.x += SPRITEWIDTH*2;
+			if(select.x+select.w>SCREENWIDTH){select.x-=SPRITEWIDTH*2; j-=1;}
+		}else if(keystates[SDLK_LEFT])
+		{
+			j -= 1;
+			select.x -= SPRITEWIDTH*2;
+			if(select.x<0){select.x+=SPRITEWIDTH*2; j+=1;}
+		}else if(keystates[SDLK_SPACE])
+		{
+			primaryWeapon = *reinterpret_cast<weapon*>(inventory[j]);
+		}
 
-		if(SDL_FillRect(mainWindow.screen, NULL, windowColour) == -1)
-		{MessageBox(NULL, "Error", "ALERT", MB_OK);}
+		SDL_FillRect(mainWindow.screen, NULL, windowColour);
 		int itemX(0), itemY(0);
 		for(unsigned int i=0;i<inventory.size();i++)
 		{
-			apply_surface(itemX, itemY, inventory[i].texture,
+			apply_surface(itemX, itemY, inventory[i]->texture,
 				   	mainWindow.screen);
-			if(itemX+inventory[i].w+SPRITEWIDTH < SCREENWIDTH)
-			{itemX += inventory[i].w + SPRITEWIDTH;}
-			else{itemX = 0;}
-			if(itemY+inventory[i].h+SPRITEHEIGHT < SCREENHEIGHT)
-			{itemY += inventory[i].h + SPRITEHEIGHT;}
-			else{break;}
+			if(itemX+inventory[i]->w+SPRITEWIDTH > SCREENWIDTH)
+			{itemY += inventory[i]->w + SPRITEWIDTH; itemX = 0;}
+			else{itemX += inventory[i]->w+SPRITEWIDTH;}
 		}
+		apply_surface(select.x, select.y, select.texture, mainWindow.screen);
 		if(SDL_Flip(mainWindow.screen) == -1)
 		{MessageBox(NULL, "Error", "ALERT", MB_OK);}
 
-		if(fps.get_ticks() < 1000/FRAMESPERSECOND)
+		if(fps.get_ticks() < 1000/12)
 		{
-			SDL_Delay((1000/FRAMESPERSECOND) - fps.get_ticks());
+			SDL_Delay((1000/12) - fps.get_ticks());
 		}	
 	}
 }
