@@ -12,7 +12,7 @@ using namespace std;
 
 
 #define MAPWIDTH 100
-#define MAPLENGTH 100
+#define MAPHEIGHT 100
 #define MAPSIZE 10000
 #define SPRITEHEIGHT 32
 #define SPRITEWIDTH 32
@@ -30,9 +30,11 @@ class thing;
 struct tile;
 class item;
 class weapon;
+class ammo;
 class creature;
 class player;
 class npc;
+class enemy;
 class map;
 class window;
 class timer;
@@ -42,6 +44,7 @@ class timer;
 
 class thing
 {
+	private:
 	public:
 		int x, y, w, h;
 		int xVel, yVel;
@@ -52,46 +55,119 @@ class thing
 
 struct tile: public thing
 {
+	private:
 	public:
 		int type;
 		std::string info;
 		SDL_Surface *texture;
+
+		tile();
 };
 
 
 class item: public thing
 {
+	private:
 	public:
-		SDL_Surface *texture;
-};
-
-
-class ammo: public item
-{
-	public:
-		int direction;
-		int damage;
-		int effect;
+		SDL_Surface* texture;
 		SDL_Surface* texture1;
 		SDL_Surface* texture2;
 		SDL_Surface* texture3;
 		SDL_Surface* texture4;
+
+		item();
 };
 
 
 class weapon: public item
 {
+	private:
 	public:
 		int damage;
 		int effect;
 		int range;
 		bool ranged;
-		SDL_Surface* texture1;
-		SDL_Surface* texture2;
-		SDL_Surface* texture3;
-		SDL_Surface* texture4;
 
 		weapon();
+};
+
+
+class ammo: public item
+{
+	private:
+	public:
+		int direction;
+		int damage;
+		int effect;
+
+		ammo();
+};
+
+
+class creature: public thing
+{
+	private:
+	public:
+		char* name;		
+		int race;
+		int hp;
+		int mp;
+		int status;
+		int strength;
+		int endurance;
+		int agility;
+		int intelligence;
+		int charisma;
+		int wisdom;
+		int will;
+		SDL_Surface* texture;
+		SDL_Rect camera;
+		int direction;
+		weapon primaryWeapon;
+
+		creature();
+		void show(SDL_Surface *&screen);
+};
+
+
+class player: public creature
+{
+	private:
+	public:
+		bool weapon_drawn;
+		bool inventoryFlag;
+		int keysense;
+		
+		std::vector<item*> inventory;
+		std::vector<ammo> quiver;
+
+		player();
+		bool handleInput(Uint8 *keystates);
+		bool move(map &world, Uint32 deltaTicks);
+		void draw_weapon(map &map1, window &mainWindow);
+		void checkInventory(window &mainWindow);		
+		void set_camera();
+		void show(SDL_Surface *&screen);
+};
+
+
+class npc: public creature
+{
+	private:
+	public:
+		std::string name;
+
+		npc();
+		bool think(player &TheOne);		
+		void move(map &map1, player &TheOne, Uint32 deltaTicks);
+};
+
+
+class enemy: public npc
+{
+	private:
+	public:
+		enemy();
 };
 
 
@@ -109,6 +185,7 @@ class map
 		std::vector<npc> creatureList;
 		std::vector<ammo> projectiles;
 
+		map();
 		bool readMap();
 		bool loadStage();
 		void projectileLoop(player &TheOne, Uint32 deltaTicks);
@@ -127,80 +204,11 @@ class window
 
 	public:
 		SDL_Surface *screen;
+
 		window();
 		void handle_events(SDL_Event event);
 		void toggle_fullscreen();
 		bool error();
-};
-
-
-class creature: public thing
-{
-	protected:
-
-	public:
-		// race?
-		int hp;
-		int mp;
-		int status;
-
-		int strength;
-		int endurance;
-		int agility;
-		int intelligence;
-		int charisma;
-		int wisdom;
-		int will;
-
-		char* name;
-		SDL_Surface* texture;
-		SDL_Rect camera;
-		int direction;
-		weapon primaryWeapon;
-		void show(SDL_Surface *&screen);		
-
-		creature();
-};
-
-
-class npc: public creature
-{
-	private:
-	public:
-		std::string name;
-
-		bool think(player &TheOne);		
-		void move(map &map1, player &TheOne, Uint32 deltaTicks);
-
-		npc();	
-};
-
-
-class enemy: public npc
-{
-	private:
-	public:
-		enemy();
-};
-
-
-class player: public creature
-{
-	public:
-		bool weapon_drawn;
-		bool inventoryFlag;
-		int keysense;
-		
-		std::vector<item*> inventory;
-		std::vector<ammo> quiver;
-
-		player();
-		bool handleInput(Uint8 *keystates);
-		bool move(map &world, Uint32 deltaTicks);
-		void draw_weapon(map &map1, window &mainWindow);
-		void checkInventory(window &mainWindow);		
-		void set_camera();
-		void show(SDL_Surface *&screen);
 };
 
 

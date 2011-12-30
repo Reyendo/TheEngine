@@ -104,5 +104,6 @@ int main(int argc, char* args[])
 		}
 	}
 
+	clean_up(mainWindow, map1, player1);
 	return 0;
 }

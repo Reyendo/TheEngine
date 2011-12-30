@@ -15,6 +15,90 @@
 
 
 
+// CONSTRUCTORS
+
+thing::thing()
+	: x(0)
+	, y(0)
+	, w(SPRITEWIDTH)
+	, h(SPRITEHEIGHT)
+	, xVel(0)
+	, yVel(0)
+{}
+
+
+tile::tile()
+	: type(0)
+	, texture(NULL)
+{}
+
+
+item::item()
+	: texture(NULL)
+	, texture1(NULL)
+	, texture2(NULL)
+	, texture3(NULL)
+	, texture4(NULL)
+{}
+
+
+weapon::weapon()
+	: damage(0)
+	, effect(0)
+	, range(0)
+	, ranged(false)
+{}
+
+
+ammo::ammo()
+	: direction(0)
+	, damage(0)
+	, effect(0)
+{}
+
+
+creature::creature()
+	: name(NULL)
+	, race(0)
+	, hp(0)
+	, mp(0)
+	, status(0)
+	, strength(0)
+	, endurance(0)
+	, agility(0)
+	, intelligence(0)
+	, charisma(0)
+	, wisdom(0)
+	, will(0)
+	, texture(NULL)
+	, direction(0)
+{
+	camera.x=0;
+	camera.y=0;
+	camera.w=SCREENWIDTH;
+	camera.h=SCREENHEIGHT;
+}
+
+
+player::player()
+	: weapon_drawn(false)
+	, inventoryFlag(false)
+	, keysense(0)
+{}
+
+
+npc::npc()
+{}
+
+
+enemy::enemy()
+{}
+
+
+map::map()
+{}
+
+
 window::window()
 {
 	screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP,
@@ -35,58 +119,6 @@ window::window()
 }
 
 
-thing::thing()
-	: x(0)
-	, y(0)
-	, w(SPRITEWIDTH)
-	, h(SPRITEHEIGHT)
-	, xVel(0)
-	, yVel(0)
-{}
-
-
-weapon::weapon()
-{}
-
-
-creature::creature()
-	: hp(0)
-	, mp(0)
-	, status(0)
-	, strength(0)
-	, endurance(0)
-	, agility(0)
-	, intelligence(0)
-	, charisma(0)
-	, wisdom(0)
-	, will(0)
-   	, name(NULL)
-	, texture(0)
-	, direction(0)
-{
-	thing();
-	camera.x=0;
-	camera.y=0;
-	camera.w=SCREENWIDTH;
-	camera.h=SCREENHEIGHT;
-}
-
-
-npc::npc()
-{creature();}
-
-
-enemy::enemy()
-{npc();}
-
-
-player::player()
-	: weapon_drawn(false)
-	, inventoryFlag(false)
-	, keysense(0)
-{creature();}
-
-
 timer::timer()
 	: startTicks(0)
 	, pausedTicks(0)
@@ -95,423 +127,13 @@ timer::timer()
 {}
 
 
-bool map::readMap()
-{
-	ifstream map;
-	map.open(name.c_str());
-	if(map.is_open())
-	{
-		int i(0);
-		string line, token;
-		while(getline(map, line))
-		{
-			if(i < 50)
-			{
-				for(unsigned int j=0; j<line.length(); j++)
-				{
-					if(line[j] == ',')
-					{
-						texName[i] = token;
-						token.erase(0, token.length());
-						i++;
-					}else{token+=line[j];}
-				}
-			}else if(i<100)
-			{
-				for(unsigned int j=0; j<line.length(); j++)
-				{
-					if(line[j] == ',')
-					{
-						tileType[i-50] = atoi(token.c_str());
-						token.erase(0, token.length());
-						i++;
-					}else{token+=line[j];}
-				}
-			}else if(i<150)
-			{
-				for(unsigned int j=0; j<line.length(); j++)
-				{
-					if(line[j] == ',')
-					{
-						tileInfo[i-100] = token;
-						token.erase(0, token.length());
-						i++;
-					}else{token+=line[j];}
-				}
-			}else if(i<MAPSIZE+150)
-			{
-				for(unsigned int j=0;j<line.length();j++)
-				{
-					if(line[j]==',')
-					{
-						layout[i-150]=atoi(token.c_str());
-						token.erase(0, token.length());
-						i++;
-					}else{token+=line[j];}
-				}
-			}else
-			{
-				for(unsigned int j=0;j<line.length();j++)
-				{
-					if(line[j]==',')
-					{
-						npc mapNPC;
-						int l(0);
-						std::string temp;
-						for(unsigned int k=0;k<j;k++)
-						{
-							if(token[k]=='%')
-							{
-								if(l==0)
-								{
-									mapNPC.name=temp;
-								}else if(l==1)
-								{
-									mapNPC.x=atoi(temp.c_str());
-								}else if(l==2)
-								{
-									mapNPC.y=atoi(temp.c_str());
-								}else if(l==3)
-								{
-									mapNPC.w=atoi(temp.c_str());
-								}else if(l==4)
-								{
-									mapNPC.h=atoi(temp.c_str());
-								}
-								temp.erase(0,temp.length());
-								l++;
-							}else{temp+=token[k];}
-						}
-						mapNPC.hp=atoi(temp.c_str());
-						creatureList.push_back(mapNPC);
-						i++;
-					}else{token+=line[j];}
-				}
-			}
-		}
-
-		map.close();
-		return true;
-	}else
-	{
-		return false;
-	}
-}
 
 
-bool map::loadStage()
-{
-	for(int i=0; i<50; i++)
-	{
-		if(texName[i] != "" || "0")
-		{
-			texture[i] = load_image("data\\"+texName[i]);
-		}else
-		{
-			break;
-		}
-	}
-
-	int j = 0;
-	for(int y=0; y<MAPWIDTH; y++)
-	{
-		for(int x=0; x<MAPLENGTH; x++)
-		{
-			tileList[j].x = x*TILEWIDTH;
-			tileList[j].y = y*TILEHEIGHT;
-			tileList[j].w = TILEWIDTH;
-			tileList[j].h = TILEHEIGHT;
-			tileList[j].type = tileType[layout[j]];
-			tileList[j].info = "data\\maps\\"+tileInfo[layout[j]];
-			tileList[j].texture = texture[layout[j]];
-			j++;
-		}
-	}
-
-	for(unsigned int i=0;i<creatureList.size();i++)
-	{
-		creatureList[i].texture=load_image("data\\"+creatureList[i].name);
-	}
-
-	return true;
-}
+// BODY FUNCTIONS
 
 
-void map::projectileLoop(player &TheOne, Uint32 deltaTicks)
-{
-	vector<ammo>::iterator it = projectiles.begin();
-	for(unsigned int j=0;j<projectiles.size();j++)
-	{
-		if(projectiles[j].xVel == 0 && projectiles[j].yVel == 0)
-		{
-			return;
-		}
-
-		projectiles[j].x += projectiles[j].xVel * (deltaTicks/1000.f);
-		projectiles[j].y += projectiles[j].yVel * (deltaTicks/1000.f);
-
-		if(projectiles[j].x < 0)
-		{
-			projectiles.erase(it+j);
-		}else if(projectiles[j].x+SPRITEWIDTH > MAPWIDTH*TILEWIDTH)
-		{
-			projectiles.erase(it+j);
-		}
-
-		if(projectiles[j].y < 0)
-		{
-			projectiles.erase(it+j);
-		}else if(projectiles[j].y+TILEHEIGHT > MAPLENGTH*TILEHEIGHT)
-		{
-			projectiles.erase(it+j);
-		}
-
-		int lol;
-		for(int i=0;i<MAPSIZE;i++)
-		{
-			lol = collision(projectiles[j], tileList[i]);
-			if(lol)
-			{
-				switch(tileList[i].type)
-				{
-					case 5:
-						if(lol == 1)
-						{projectiles.erase(it+j);}
-						else if(lol == 2)
-						{projectiles.erase(it+j);}
-						else if(lol == 3)
-						{projectiles.erase(it+j);}
-						else
-						{projectiles.erase(it+j);}
-				}
-			}
-		}
-
-		for(unsigned int i=0; i<creatureList.size();i++)
-		{
-			lol = collision(projectiles[j], creatureList[i]);
-			switch(lol)
-			{
-				case 1:
-					creatureList[i].hp -= projectiles[j].damage;
-					projectiles.erase(it+j);
-					break;
-				case 2:
-					creatureList[i].hp -= projectiles[j].damage;
-					projectiles.erase(it+j);
-					break;
-				case 3:
-					creatureList[i].hp -= projectiles[j].damage;
-					projectiles.erase(it+j);
-					break;
-				case 4:
-					creatureList[i].hp -= projectiles[j].damage;
-					projectiles.erase(it+j);
-					break;
-				default:
-					break;
-			}
-		}
-
-		switch(collision(projectiles[j], TheOne))
-		{
-			case 1:
-				TheOne.hp -= projectiles[j].damage;
-				projectiles.erase(it+j);
-				break;
-			case 2:
-				TheOne.hp -= projectiles[j].damage;
-				projectiles.erase(it+j);
-				break;
-			case  3:
-				TheOne.hp -= projectiles[j].damage;
-				projectiles.erase(it+j);
-				break;
-			case 4:
-				TheOne.hp -= projectiles[j].damage;
-				projectiles.erase(it+j);
-				break;
-			default:
-				break;
-		}
-
-		if(projectiles[j].xVel > 0)
-		{
-			projectiles[j].direction = 2;
-		}else if(projectiles[j].xVel < 0)
-		{
-			projectiles[j].direction = 4;
-		}
-		if(projectiles[j].yVel > 0)
-		{
-			projectiles[j].direction = 1;
-		}else if(projectiles[j].yVel < 0)
-		{
-			projectiles[j].direction = 3;
-		}
-	}
-}
-
-
-bool map::drawField(SDL_Surface *&screen, player &TheOne)
-{
-	for(int i=0; i<MAPSIZE; i++)
-	{
-		if(tileList[i].x>=TheOne.camera.x &&
-				tileList[i].x+tileList[i].w<=TheOne.camera.x+TheOne.camera.w &&
-				tileList[i].y>=TheOne.camera.y &&
-				tileList[i].y+tileList[i].h<=TheOne.camera.y+TheOne.camera.h)
-		{
-			apply_surface(tileList[i].x - TheOne.camera.x,
-					tileList[i].y - TheOne.camera.y,
-					tileList[i].texture, screen);
-		}
-	}
-	
-	return true;
-}
-
-
-bool map::drawNPC(SDL_Surface *&screen, player &TheOne)
-{
-	for(unsigned int i=0; i<creatureList.size();i++)
-	{
-		if(creatureList[i].x>=TheOne.camera.x&&creatureList[i].x+creatureList[i].w<=TheOne.camera.x+TheOne.camera.w&&creatureList[i].y>=TheOne.camera.y&&creatureList[i].y+creatureList[i].h<=TheOne.camera.y+TheOne.camera.h)
-		{
-			apply_surface(creatureList[i].x - TheOne.camera.x,
-					creatureList[i].y - TheOne.camera.y,
-					creatureList[i].texture, screen);
-		}
-	}
-	return true;
-}
-
-
-bool map::drawProjectiles(SDL_Surface *&screen, player &TheOne)
-{
-	for(unsigned int i=0; i<projectiles.size();i++)
-	{
-		if(projectiles[i].x>=TheOne.camera.x&&projectiles[i].x+projectiles[i].w<=TheOne.camera.x+TheOne.camera.w&&projectiles[i].y>=TheOne.camera.y&&projectiles[i].y+projectiles[i].h<=TheOne.camera.y+TheOne.camera.h)
-		{
-			switch(projectiles[i].direction)
-			{
-				case 1:
-					apply_surface(projectiles[i].x - TheOne.camera.x,
-						projectiles[i].y - TheOne.camera.y,
-						projectiles[i].texture1, screen);
-					break;
-				case 2:
-					apply_surface(projectiles[i].x - TheOne.camera.x,
-						projectiles[i].y - TheOne.camera.y,
-						projectiles[i].texture2, screen);
-					break;
-				case 3:
-					apply_surface(projectiles[i].x - TheOne.camera.x,
-						projectiles[i].y - TheOne.camera.y,
-						projectiles[i].texture3, screen);
-					break;
-				case 4:
-					apply_surface(projectiles[i].x - TheOne.camera.x,
-						projectiles[i].y - TheOne.camera.y,
-						projectiles[i].texture4, screen);
-					break;
-				default:
-					break;
-			}
-		}
-	}
-	return true;
-}
-
-
-void map::cleanUp()
-{
-	for(unsigned int i=0;i<creatureList.size();i++)
-	{
-		if(creatureList[i].hp<=0)
-		{
-			creatureList.erase(creatureList.begin()+i);
-		}
-	}
-}
-
-
-void window::handle_events(SDL_Event event)
-{
-	if(windowOK == false)
-	{
-		return;
-	}
-
-	if(event.type == SDL_VIDEORESIZE)
-	{
-		screen = SDL_SetVideoMode(event.resize.w, event.resize.h, SCREENBPP,
-				SDL_SWSURFACE | SDL_RESIZABLE);
-
-		if(screen == NULL)
-		{
-			windowOK = false;
-			return;
-		}
-	}else if((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_F12))
-	{
-		toggle_fullscreen();
-	}else if(event.type == SDL_VIDEOEXPOSE)
-	{
-		if(SDL_Flip(screen) == -1)
-		{
-			windowOK = false;
-			return;
-		}
-	}else if(event.type == SDL_ACTIVEEVENT)
-	{
-		if(event.active.state & SDL_APPACTIVE)
-		{
-			if(event.active.gain == 0)
-			{
-				SDL_WaitEvent(&event);
-			}
-		}
-	}
-}
-
-
-void window::toggle_fullscreen()
-{
-	if(windowed == true)
-	{
-		screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP,
-				SDL_SWSURFACE | SDL_RESIZABLE | SDL_FULLSCREEN);
-
-		if(screen == NULL)
-		{
-			windowOK = false;
-			return;
-		}
-
-		windowed = false;
-	}else if(windowed == false)
-	{
-		screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP,
-				SDL_SWSURFACE | SDL_RESIZABLE);
-
-		if(screen == NULL)
-		{
-			windowOK = false;
-			return;
-		}
-
-		windowed = true;
-	}
-}
-
-
-bool window:: error()
-{
-	return !windowOK;
-}
-
-
+// creature
+//
 void creature::show(SDL_Surface *&screen)
 {
 	if(x>camera.x&&x+w<camera.x+camera.w&&y>camera.y&&y+h<camera.y+camera.h)
@@ -521,138 +143,9 @@ void creature::show(SDL_Surface *&screen)
 }
 
 
-bool npc::think(player &TheOne)
-{
-	if(x<TheOne.x)
-	{
-		xVel = (PLAYERVELOCITY/4);
-	}else if(x>TheOne.x)
-	{
-		xVel = -(PLAYERVELOCITY/4);
-	}else
-	{
-		xVel = 0;
-	}
-	if(y<TheOne.y)
-	{
-		yVel = (PLAYERVELOCITY/4);
-	}else if(y>TheOne.y)
-	{
-		yVel = -(PLAYERVELOCITY/4);
-	}else
-	{
-		yVel = 0;
-	}
 
-	return true;
-}
-
-
-void npc::move(map &map1, player &TheOne, Uint32 deltaTicks)
-{	
-	if(xVel == 0 && yVel == 0)
-	{
-		return;
-	}
-
-	x += xVel * (deltaTicks/1000.f);
-	y += yVel * (deltaTicks/1000.f);
-
-	if(x < 0)
-	{
-		x = 0;
-	}else if(x+SPRITEWIDTH > MAPWIDTH*TILEWIDTH)
-	{
-		x = (MAPWIDTH*TILEWIDTH) - SPRITEWIDTH;
-	}
-
-	if(y < 0)
-	{
-		y = 0;
-	}else if(y+TILEHEIGHT > MAPLENGTH*TILEHEIGHT)
-	{
-		y = (MAPLENGTH*TILEHEIGHT) - SPRITEHEIGHT;
-	}
-
-	int lol;
-	for(int i=0;i<MAPSIZE;i++)
-	{
-		lol = collision(*this, map1.tileList[i]);
-		if(lol)
-		{
-			switch(map1.tileList[i].type)
-			{
-				case 5:
-					if(lol == 1)
-					{x=map1.tileList[i].x-SPRITEWIDTH;}
-					else if(lol == 2)
-					{x=map1.tileList[i].x+map1.tileList[i].w;}
-					else if(lol == 3)
-					{y=map1.tileList[i].y-SPRITEWIDTH;}
-					else
-					{y=map1.tileList[i].y+map1.tileList[i].h;}
-			}
-		}
-	}
-
-	for(unsigned int i=0; i<map1.creatureList.size();i++)
-	{
-		lol = collision(*this, map1.creatureList[i]);
-		switch(lol)
-		{
-			case 1:
-				x=map1.creatureList[i].x-SPRITEWIDTH;
-				break;
-			case 2:
-				x=map1.creatureList[i].x+map1.creatureList[i].w;
-				break;
-			case 3:
-				y=map1.creatureList[i].y-SPRITEWIDTH;
-				break;
-			case 4:
-				y=map1.creatureList[i].y+map1.creatureList[i].h;
-				break;
-			default:
-				break;
-		}
-	}
-
-	switch(collision(*this, TheOne))
-	{
-		case 1:
-			x=TheOne.x-w;
-			break;
-		case 2:
-			x=TheOne.x+TheOne.w;
-			break;
-		case  3:
-			y=TheOne.y-h;
-			break;
-		case 4:
-			y=TheOne.y+TheOne.h;
-			break;
-		default:
-			break;
-	}
-
-	if(xVel > 0)
-	{
-		direction = 2;
-	}else if(xVel < 0)
-	{
-		direction = 4;
-	}
-	if(yVel > 0)
-	{
-		direction = 1;
-	}else if(yVel < 0)
-	{
-		direction = 3;
-	}
-
-}
-
-
+// player
+//
 bool player::handleInput(Uint8 *keystates)
 {
 	if(keystates[SDLK_RIGHT])
@@ -718,9 +211,9 @@ bool player::move(map &map1, Uint32 deltaTicks)
 	if(y < 0)
 	{
 		y = 0;
-	}else if(y+TILEHEIGHT > MAPLENGTH*TILEHEIGHT)
+	}else if(y+TILEHEIGHT > MAPHEIGHT*TILEHEIGHT)
 	{
-		y = (MAPLENGTH*TILEHEIGHT) - SPRITEHEIGHT;
+		y = (MAPHEIGHT*TILEHEIGHT) - SPRITEHEIGHT;
 	}
 	
 	int lol;
@@ -752,7 +245,7 @@ bool player::move(map &map1, Uint32 deltaTicks)
 					else if(lol == 3)
 					{y = 0;}
 					else if(lol == 4)
-					{y = MAPLENGTH - SPRITEHEIGHT;}
+					{y = MAPHEIGHT - SPRITEHEIGHT;}
 					break;
 			}
 		}
@@ -797,7 +290,6 @@ bool player::move(map &map1, Uint32 deltaTicks)
 
 	return true;
 }
-
 
 
 // REVAMP LATER
@@ -990,9 +482,9 @@ void player::set_camera()
 		camera.x = (MAPWIDTH*TILEWIDTH) - camera.w;
 	}
 
-	if(camera.y+camera.h > (MAPLENGTH*TILEHEIGHT))
+	if(camera.y+camera.h > (MAPHEIGHT*TILEHEIGHT))
 	{
-		camera.y = (MAPLENGTH*TILEHEIGHT) - camera.h;
+		camera.y = (MAPHEIGHT*TILEHEIGHT) - camera.h;
 	}
 }
 
@@ -1003,6 +495,567 @@ void player::show(SDL_Surface *&screen)
 }
 
 
+bool npc::think(player &TheOne)
+{
+	if(x<TheOne.x)
+	{
+		xVel = (PLAYERVELOCITY/4);
+	}else if(x>TheOne.x)
+	{
+		xVel = -(PLAYERVELOCITY/4);
+	}else
+	{
+		xVel = 0;
+	}
+	if(y<TheOne.y)
+	{
+		yVel = (PLAYERVELOCITY/4);
+	}else if(y>TheOne.y)
+	{
+		yVel = -(PLAYERVELOCITY/4);
+	}else
+	{
+		yVel = 0;
+	}
+
+	return true;
+}
+
+
+
+// npc
+//
+void npc::move(map &map1, player &TheOne, Uint32 deltaTicks)
+{	
+	if(xVel == 0 && yVel == 0)
+	{
+		return;
+	}
+
+	x += xVel * (deltaTicks/1000.f);
+	y += yVel * (deltaTicks/1000.f);
+
+	if(x < 0)
+	{
+		x = 0;
+	}else if(x+SPRITEWIDTH > MAPWIDTH*TILEWIDTH)
+	{
+		x = (MAPWIDTH*TILEWIDTH) - SPRITEWIDTH;
+	}
+
+	if(y < 0)
+	{
+		y = 0;
+	}else if(y+TILEHEIGHT > MAPHEIGHT*TILEHEIGHT)
+	{
+		y = (MAPHEIGHT*TILEHEIGHT) - SPRITEHEIGHT;
+	}
+
+	int lol;
+	for(int i=0;i<MAPSIZE;i++)
+	{
+		lol = collision(*this, map1.tileList[i]);
+		if(lol)
+		{
+			switch(map1.tileList[i].type)
+			{
+				case 5:
+					if(lol == 1)
+					{x=map1.tileList[i].x-SPRITEWIDTH;}
+					else if(lol == 2)
+					{x=map1.tileList[i].x+map1.tileList[i].w;}
+					else if(lol == 3)
+					{y=map1.tileList[i].y-SPRITEWIDTH;}
+					else
+					{y=map1.tileList[i].y+map1.tileList[i].h;}
+			}
+		}
+	}
+
+	for(unsigned int i=0; i<map1.creatureList.size();i++)
+	{
+		lol = collision(*this, map1.creatureList[i]);
+		switch(lol)
+		{
+			case 1:
+				x=map1.creatureList[i].x-SPRITEWIDTH;
+				break;
+			case 2:
+				x=map1.creatureList[i].x+map1.creatureList[i].w;
+				break;
+			case 3:
+				y=map1.creatureList[i].y-SPRITEWIDTH;
+				break;
+			case 4:
+				y=map1.creatureList[i].y+map1.creatureList[i].h;
+				break;
+			default:
+				break;
+		}
+	}
+
+	switch(collision(*this, TheOne))
+	{
+		case 1:
+			x=TheOne.x-w;
+			break;
+		case 2:
+			x=TheOne.x+TheOne.w;
+			break;
+		case  3:
+			y=TheOne.y-h;
+			break;
+		case 4:
+			y=TheOne.y+TheOne.h;
+			break;
+		default:
+			break;
+	}
+
+	if(xVel > 0)
+	{
+		direction = 2;
+	}else if(xVel < 0)
+	{
+		direction = 4;
+	}
+	if(yVel > 0)
+	{
+		direction = 1;
+	}else if(yVel < 0)
+	{
+		direction = 3;
+	}
+
+}
+
+
+
+// map
+//
+bool map::readMap()
+{
+	ifstream map;
+	map.open(name.c_str());
+	if(map.is_open())
+	{
+		creatureList.clear();
+
+		int i(0);
+		string line, token;
+		while(getline(map, line))
+		{
+			if(i < 50)
+			{
+				for(unsigned int j=0; j<line.length(); j++)
+				{
+					if(line[j] == ',')
+					{
+						texName[i] = token;
+						token.erase(0, token.length());
+						i++;
+					}else{token+=line[j];}
+				}
+			}else if(i<100)
+			{
+				for(unsigned int j=0; j<line.length(); j++)
+				{
+					if(line[j] == ',')
+					{
+						tileType[i-50] = atoi(token.c_str());
+						token.erase(0, token.length());
+						i++;
+					}else{token+=line[j];}
+				}
+			}else if(i<150)
+			{
+				for(unsigned int j=0; j<line.length(); j++)
+				{
+					if(line[j] == ',')
+					{
+						tileInfo[i-100] = token;
+						token.erase(0, token.length());
+						i++;
+					}else{token+=line[j];}
+				}
+			}else if(i<MAPSIZE+150)
+			{
+				for(unsigned int j=0;j<line.length();j++)
+				{
+					if(line[j]==',')
+					{
+						layout[i-150]=atoi(token.c_str());
+						token.erase(0, token.length());
+						i++;
+					}else{token+=line[j];}
+				}
+			}else
+			{
+				for(unsigned int j=0;j<line.length();j++)
+				{
+					if(line[j]==',')
+					{
+						npc mapNPC;
+						int l(0);
+						std::string temp;
+						for(unsigned int k=0;k<j;k++)
+						{
+							if(token[k]=='%')
+							{
+								if(l==0)
+								{
+									mapNPC.name=temp;
+								}else if(l==1)
+								{
+									mapNPC.x=atoi(temp.c_str());
+								}else if(l==2)
+								{
+									mapNPC.y=atoi(temp.c_str());
+								}else if(l==3)
+								{
+									mapNPC.w=atoi(temp.c_str());
+								}else if(l==4)
+								{
+									mapNPC.h=atoi(temp.c_str());
+								}
+								temp.erase(0,temp.length());
+								l++;
+							}else{temp+=token[k];}
+						}
+						mapNPC.hp=atoi(temp.c_str());
+						creatureList.push_back(mapNPC);
+						i++;
+					}else{token+=line[j];}
+				}
+			}
+		}
+
+		map.close();
+		return true;
+	}else
+	{
+		return false;
+	}
+}
+
+
+bool map::loadStage()
+{
+	for(int i=0; i<50; i++)
+	{
+		if(texName[i] != "" || "0")
+		{
+			texture[i] = load_image("data\\"+texName[i]);
+		}else
+		{
+			break;
+		}
+	}
+
+	int j = 0;
+	for(int y=0; y<MAPWIDTH; y++)
+	{
+		for(int x=0; x<MAPHEIGHT; x++)
+		{
+			tileList[j].x = x*TILEWIDTH;
+			tileList[j].y = y*TILEHEIGHT;
+			tileList[j].w = TILEWIDTH;
+			tileList[j].h = TILEHEIGHT;
+			tileList[j].type = tileType[layout[j]];
+			tileList[j].info = "data\\maps\\"+tileInfo[layout[j]];
+			tileList[j].texture = texture[layout[j]];
+			j++;
+		}
+	}
+
+	for(unsigned int i=0;i<creatureList.size();i++)
+	{
+		creatureList[i].texture=load_image("data\\"+creatureList[i].name);
+	}
+
+	return true;
+}
+
+
+void map::projectileLoop(player &TheOne, Uint32 deltaTicks)
+{
+	vector<ammo>::iterator it = projectiles.begin();
+	for(unsigned int j=0;j<projectiles.size();j++)
+	{
+		if(projectiles[j].xVel == 0 && projectiles[j].yVel == 0)
+		{
+			return;
+		}
+
+		projectiles[j].x += projectiles[j].xVel * (deltaTicks/1000.f);
+		projectiles[j].y += projectiles[j].yVel * (deltaTicks/1000.f);
+
+		if(projectiles[j].x < 0)
+		{
+			projectiles.erase(it+j);
+		}else if(projectiles[j].x+SPRITEWIDTH > MAPWIDTH*TILEWIDTH)
+		{
+			projectiles.erase(it+j);
+		}
+
+		if(projectiles[j].y < 0)
+		{
+			projectiles.erase(it+j);
+		}else if(projectiles[j].y+TILEHEIGHT > MAPHEIGHT*TILEHEIGHT)
+		{
+			projectiles.erase(it+j);
+		}
+
+		int lol;
+		for(int i=0;i<MAPSIZE;i++)
+		{
+			lol = collision(projectiles[j], tileList[i]);
+			if(lol)
+			{
+				switch(tileList[i].type)
+				{
+					case 5:
+						if(lol == 1)
+						{projectiles.erase(it+j);}
+						else if(lol == 2)
+						{projectiles.erase(it+j);}
+						else if(lol == 3)
+						{projectiles.erase(it+j);}
+						else
+						{projectiles.erase(it+j);}
+				}
+			}
+		}
+
+		for(unsigned int i=0; i<creatureList.size();i++)
+		{
+			lol = collision(projectiles[j], creatureList[i]);
+			switch(lol)
+			{
+				case 1:
+					creatureList[i].hp -= projectiles[j].damage;
+					projectiles.erase(it+j);
+					break;
+				case 2:
+					creatureList[i].hp -= projectiles[j].damage;
+					projectiles.erase(it+j);
+					break;
+				case 3:
+					creatureList[i].hp -= projectiles[j].damage;
+					projectiles.erase(it+j);
+					break;
+				case 4:
+					creatureList[i].hp -= projectiles[j].damage;
+					projectiles.erase(it+j);
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(collision(projectiles[j], TheOne))
+		{
+			case 1:
+				TheOne.hp -= projectiles[j].damage;
+				projectiles.erase(it+j);
+				break;
+			case 2:
+				TheOne.hp -= projectiles[j].damage;
+				projectiles.erase(it+j);
+				break;
+			case  3:
+				TheOne.hp -= projectiles[j].damage;
+				projectiles.erase(it+j);
+				break;
+			case 4:
+				TheOne.hp -= projectiles[j].damage;
+				projectiles.erase(it+j);
+				break;
+			default:
+				break;
+		}
+
+		if(projectiles[j].xVel > 0)
+		{
+			projectiles[j].direction = 2;
+		}else if(projectiles[j].xVel < 0)
+		{
+			projectiles[j].direction = 4;
+		}
+		if(projectiles[j].yVel > 0)
+		{
+			projectiles[j].direction = 1;
+		}else if(projectiles[j].yVel < 0)
+		{
+			projectiles[j].direction = 3;
+		}
+	}
+}
+
+
+bool map::drawField(SDL_Surface *&screen, player &TheOne)
+{
+	for(int i=0; i<MAPSIZE; i++)
+	{
+		if(tileList[i].x>=TheOne.camera.x &&
+				tileList[i].x+tileList[i].w<=TheOne.camera.x+TheOne.camera.w &&
+				tileList[i].y>=TheOne.camera.y &&
+				tileList[i].y+tileList[i].h<=TheOne.camera.y+TheOne.camera.h)
+		{
+			apply_surface(tileList[i].x - TheOne.camera.x,
+					tileList[i].y - TheOne.camera.y,
+					tileList[i].texture, screen);
+		}
+	}
+	
+	return true;
+}
+
+
+bool map::drawNPC(SDL_Surface *&screen, player &TheOne)
+{
+	for(unsigned int i=0; i<creatureList.size();i++)
+	{
+		if(creatureList[i].x>=TheOne.camera.x&&creatureList[i].x+creatureList[i].w<=TheOne.camera.x+TheOne.camera.w&&creatureList[i].y>=TheOne.camera.y&&creatureList[i].y+creatureList[i].h<=TheOne.camera.y+TheOne.camera.h)
+		{
+			apply_surface(creatureList[i].x - TheOne.camera.x,
+					creatureList[i].y - TheOne.camera.y,
+					creatureList[i].texture, screen);
+		}
+	}
+	return true;
+}
+
+
+bool map::drawProjectiles(SDL_Surface *&screen, player &TheOne)
+{
+	for(unsigned int i=0; i<projectiles.size();i++)
+	{
+		if(projectiles[i].x>=TheOne.camera.x&&projectiles[i].x+projectiles[i].w<=TheOne.camera.x+TheOne.camera.w&&projectiles[i].y>=TheOne.camera.y&&projectiles[i].y+projectiles[i].h<=TheOne.camera.y+TheOne.camera.h)
+		{
+			switch(projectiles[i].direction)
+			{
+				case 1:
+					apply_surface(projectiles[i].x - TheOne.camera.x,
+						projectiles[i].y - TheOne.camera.y,
+						projectiles[i].texture1, screen);
+					break;
+				case 2:
+					apply_surface(projectiles[i].x - TheOne.camera.x,
+						projectiles[i].y - TheOne.camera.y,
+						projectiles[i].texture2, screen);
+					break;
+				case 3:
+					apply_surface(projectiles[i].x - TheOne.camera.x,
+						projectiles[i].y - TheOne.camera.y,
+						projectiles[i].texture3, screen);
+					break;
+				case 4:
+					apply_surface(projectiles[i].x - TheOne.camera.x,
+						projectiles[i].y - TheOne.camera.y,
+						projectiles[i].texture4, screen);
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	return true;
+}
+
+
+void map::cleanUp()
+{
+	for(unsigned int i=0;i<creatureList.size();i++)
+	{
+		if(creatureList[i].hp<=0)
+		{
+			creatureList.erase(creatureList.begin()+i);
+		}
+	}
+}
+
+
+// window
+//
+void window::handle_events(SDL_Event event)
+{
+	if(windowOK == false)
+	{
+		return;
+	}
+
+	if(event.type == SDL_VIDEORESIZE)
+	{
+		screen = SDL_SetVideoMode(event.resize.w, event.resize.h, SCREENBPP,
+				SDL_SWSURFACE | SDL_RESIZABLE);
+
+		if(screen == NULL)
+		{
+			windowOK = false;
+			return;
+		}
+	}else if((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_F12))
+	{
+		toggle_fullscreen();
+	}else if(event.type == SDL_VIDEOEXPOSE)
+	{
+		if(SDL_Flip(screen) == -1)
+		{
+			windowOK = false;
+			return;
+		}
+	}else if(event.type == SDL_ACTIVEEVENT)
+	{
+		if(event.active.state & SDL_APPACTIVE)
+		{
+			if(event.active.gain == 0)
+			{
+				SDL_WaitEvent(&event);
+			}
+		}
+	}
+}
+
+
+void window::toggle_fullscreen()
+{
+	if(windowed == true)
+	{
+		screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP,
+				SDL_SWSURFACE | SDL_RESIZABLE | SDL_FULLSCREEN);
+
+		if(screen == NULL)
+		{
+			windowOK = false;
+			return;
+		}
+
+		windowed = false;
+	}else if(windowed == false)
+	{
+		screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP,
+				SDL_SWSURFACE | SDL_RESIZABLE);
+
+		if(screen == NULL)
+		{
+			windowOK = false;
+			return;
+		}
+
+		windowed = true;
+	}
+}
+
+
+bool window:: error()
+{
+	return !windowOK;
+}
+
+
+// timer
+//
 void timer::start()
 {
 	started = true;
@@ -1068,6 +1121,7 @@ bool timer::is_paused()
 
 
 
+// UNASSORTED FUNCTIONS
 
 SDL_Surface *load_image(std::string filename)
 {
