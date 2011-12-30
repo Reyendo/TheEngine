@@ -222,6 +222,7 @@ bool map::loadStage()
 			tileList[j].w = TILEWIDTH;
 			tileList[j].h = TILEHEIGHT;
 			tileList[j].type = tileType[layout[j]];
+			tileList[j].info = "data\\maps\\"+tileInfo[layout[j]];
 			tileList[j].texture = texture[layout[j]];
 			j++;
 		}

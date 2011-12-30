@@ -17,7 +17,7 @@ bool init(player &TheOne, map &world)
 
 	if(!loadSave(defSave, TheOne, world))
 	{
-		world.name = "data\\maps\\defMap.mapx";
+		world.name = "data\\maps\\defMap1.mapx";
 		TheOne.x = 0;
 		TheOne.y = 0;
 		if(!createSave(defSave, world.name, TheOne))
