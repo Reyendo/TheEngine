@@ -127,13 +127,24 @@ bool map::readMap()
 						i++;
 					}else{token+=line[j];}
 				}
-			}else if(i<MAPSIZE+100)
+			}else if(i<150)
+			{
+				for(unsigned int j=0; j<line.length(); j++)
+				{
+					if(line[j] == ',')
+					{
+						tileInfo[i-100] = token;
+						token.erase(0, token.length());
+						i++;
+					}else{token+=line[j];}
+				}
+			}else if(i<MAPSIZE+150)
 			{
 				for(unsigned int j=0;j<line.length();j++)
 				{
 					if(line[j]==',')
 					{
-						layout[i-100]=atoi(token.c_str());
+						layout[i-150]=atoi(token.c_str());
 						token.erase(0, token.length());
 						i++;
 					}else{token+=line[j];}
@@ -728,6 +739,20 @@ bool player::move(map &map1, Uint32 deltaTicks)
 					{y=map1.tileList[i].y-SPRITEWIDTH;}
 					else
 					{y=map1.tileList[i].y+map1.tileList[i].h;}
+					break;
+				case 6:
+					map1.name = map1.tileList[i].info;
+					map1.readMap();
+					map1.loadStage();
+					if(lol == 1)
+					{x = 0;}
+					else if(lol == 2)
+					{x = MAPWIDTH-SPRITEWIDTH;}
+					else if(lol == 3)
+					{y = 0;}
+					else if(lol == 4)
+					{y = MAPLENGTH - SPRITEHEIGHT;}
+					break;
 			}
 		}
 	}

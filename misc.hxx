@@ -54,6 +54,7 @@ struct tile: public thing
 {
 	public:
 		int type;
+		std::string info;
 		SDL_Surface *texture;
 };
 
@@ -100,7 +101,8 @@ class map
 	public:
 		std::string name;
 		std::string texName[50];
-		int tileType[50];
+		int tileType[50];		
+		std::string tileInfo[50];
 		SDL_Surface* texture[50];
 		int layout[MAPSIZE];
 		tile tileList[MAPSIZE];
