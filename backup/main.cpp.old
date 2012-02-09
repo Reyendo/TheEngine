@@ -1,0 +1,66 @@
+#include <SDL\SDL.h>
+#include "tools.hxx"
+
+
+
+int main(int argc, char* args[])
+{
+	bool quit = false;
+	window mainWindow;
+	SDL_Surface* buffer = NULL;
+	SDL_Event event;
+	// tile background[50];
+	// int tileNum[MAPSIZE];
+	player player1;
+	timer walkRate;
+	timer fps;
+	map world;
+
+	// if(init(player1, background, tileNum)==false)
+	if(init(player1, world)==false)
+	{
+		return 1;
+	}
+
+	walkRate.start();
+
+	while(quit == false)
+	{
+		fps.start();
+		while(SDL_PollEvent(&event))
+		{
+			mainWindow.handle_events(event);
+			// player1.handleInput(event);
+
+			if(event.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+		}	
+		
+		Uint8 *keystates = SDL_GetKeyState(NULL);
+		player1.handleInput(keystates);
+		player1.move(world.background, world.tileIndex, walkRate.get_ticks());
+		walkRate.start();
+		// SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
+		player1.set_camera();
+		SDL_FillRect(mainWindow.screen, NULL, SDL_MapRGB(
+					mainWindow.screen->format, 0xFF, 0xFF, 0xFF));
+		drawField(mainWindow.screen, player1, world.background, world.tileIndex);
+		player1.show(mainWindow.screen);
+
+		if(SDL_Flip(mainWindow.screen) == -1)
+		{
+			return 1;
+		}
+		
+		if(fps.get_ticks() < 1000/FRAMESPERSECOND)
+		{
+			SDL_Delay((1000/FRAMESPERSECOND) - fps.get_ticks());
+		}
+	}
+
+clean_up(mainWindow.screen, buffer, player1, world.background);
+
+return 0;
+}

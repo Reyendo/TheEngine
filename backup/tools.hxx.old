@@ -1,0 +1,752 @@
+#ifndef H_TOOLS
+#define H_TOOLS
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <stdlib.h>
+#include <SDL\SDL.h>
+#include <SDL\SDL_image.h>
+#include <windows.h>
+
+
+using namespace std;
+
+
+
+#define MAPWIDTH 100
+// #define MAPWIDTH 50
+#define MAPLENGTH 100
+// #define MAPLENGTH 50
+#define MAPSIZE 10000
+// #define MAPSIZE 2500	
+#define SPRITEHEIGHT 32
+#define SPRITEWIDTH 32
+#define PLAYERVELOCITY 500
+#define FRAMESPERSECOND 30
+#define TILEWIDTH 32
+#define TILEHEIGHT 32
+#define SCREENWIDTH 640
+#define SCREENHEIGHT 400
+#define SCREENBPP 32
+
+
+struct tile
+{
+	std::string texName;
+	int state;
+	SDL_Surface* texture;
+};
+
+
+class map
+{
+	private:
+	public:
+		std::string name;
+		int tileIndex[MAPSIZE];
+		tile background[50];
+
+		map();
+};
+
+
+class window
+{
+	private:
+	bool windowed;
+	bool windowOK;
+
+	public:
+	SDL_Surface *screen;
+	window();
+	void handle_events(SDL_Event event);
+	void toggle_fullscreen();
+	bool error();
+};
+
+
+class creature
+{
+	protected:
+		// race?
+		int hp;
+		int mp;
+		int status;
+
+		int strength;
+		int endurance;
+		int agility;
+		int intelligence;
+		int charisma;
+		int wisdom;
+		int will;
+
+	public:
+		char* name;
+		SDL_Surface* texture;
+		SDL_Rect camera;
+		int direction;
+		float x, y;
+		float xVel, yVel;
+
+		creature();
+};
+
+
+class player: public creature
+{
+	public:
+		player();
+		bool handleInput(Uint8 *keystates);
+		bool move(tile lol[], int layout[], Uint32 deltaTicks);
+		void set_camera();
+		void show(SDL_Surface* &screen);
+};
+
+
+
+class room
+{
+	private:
+		int width;
+		int height;
+		int walls;
+};
+
+
+class weapon
+{
+	private:
+		bool type; // physical/magical
+		int damage;
+		int range;
+		int effect;
+};
+
+
+class timer
+{
+	private:
+		int startTicks;
+
+		int pausedTicks;
+
+		bool paused;
+		bool started;
+
+	public:
+		timer();
+
+		void start();
+		void stop();
+		void pause();
+		void unpause();
+
+		int get_ticks();
+
+		bool is_started();
+		bool is_paused();
+};
+
+
+map::map()
+	: name(NULL)
+{}
+
+
+creature::creature()
+	: name(NULL)
+	, texture(0)
+	, direction(0)
+	, x(0)
+	, y(0)
+	, xVel(0)
+	, yVel(0)
+	, hp(0)
+	, mp(0)
+	, status(0)
+	, strength(0)
+	, endurance(0)
+	, agility(0)
+	, intelligence(0)
+	, charisma(0)
+	, wisdom(0)
+	, will(0)
+{
+	camera.x=0;
+	camera.y=0;
+	camera.w=SCREENWIDTH;
+	camera.h=SCREENHEIGHT;
+}
+
+
+player::player()
+{creature();}
+
+
+timer::timer()
+{
+	startTicks = 0;
+	pausedTicks = 0;
+	paused = false;
+	started = false;
+}
+
+
+window::window()
+{
+	screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP, SDL_SWSURFACE| SDL_RESIZABLE);
+
+	if(screen == NULL)
+	{
+		windowOK = false;
+		return;
+	}else
+	{
+		windowOK = true;
+	}
+
+	SDL_WM_SetCaption("The Engine", NULL);
+
+	windowed = true;
+}
+
+
+void window::handle_events(SDL_Event event)
+{
+	if(windowOK == false)
+	{
+		return;
+	}
+
+	if(event.type == SDL_VIDEORESIZE)
+	{
+		screen = SDL_SetVideoMode(event.resize.w, event.resize.h, SCREENBPP, SDL_SWSURFACE | SDL_RESIZABLE);
+
+		if(screen == NULL)
+		{
+			windowOK = false;
+			return;
+		}
+	}else if((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_F12))
+	{
+		toggle_fullscreen();
+	}else if(event.type == SDL_VIDEOEXPOSE)
+	{
+		if(SDL_Flip(screen) == -1)
+		{
+			windowOK = false;
+			return;
+		}
+	}else if(event.type == SDL_ACTIVEEVENT)
+	{
+		if(event.active.state & SDL_APPACTIVE)
+		{
+			if(event.active.gain == 0)
+			{
+				SDL_WaitEvent(&event);
+			}
+		}
+	}
+}
+
+
+void window::toggle_fullscreen()
+{
+	if(windowed == true)
+	{
+		screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP, SDL_SWSURFACE | SDL_RESIZABLE | SDL_FULLSCREEN);
+
+		if(screen == NULL)
+		{
+			windowOK = false;
+			return;
+		}
+
+		windowed = false;
+	}else if(windowed == false)
+	{
+		screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP, SDL_SWSURFACE | SDL_RESIZABLE);
+
+		if(screen == NULL)
+		{
+			windowOK = false;
+			return;
+		}
+
+		windowed = true;
+	}
+}
+
+
+bool window::error()
+{
+	return !windowOK;
+}
+
+
+void timer::start()
+{
+	started = true;
+	paused = false;
+	startTicks = SDL_GetTicks();
+}
+
+
+void timer::stop()
+{
+	started = false;
+	paused = false;
+}
+
+
+void timer::pause()
+{
+	if((started == true) && (paused == false))
+	{
+		paused = true;
+
+		pausedTicks = SDL_GetTicks() - startTicks;
+	}
+}
+
+
+void timer::unpause()
+{
+	if(paused == true)
+	{
+		paused = false;
+		startTicks = SDL_GetTicks() - pausedTicks;
+		pausedTicks = 0;
+	}
+}
+
+
+int timer::get_ticks()
+{
+	if(started == true)
+	{
+		if(paused == true)
+		{
+			return pausedTicks;
+		}
+		else
+		{
+			return SDL_GetTicks() - startTicks;
+		}
+	}
+	return 0;
+}
+
+
+bool timer::is_started()
+{
+	return started;
+}
+
+
+bool timer::is_paused()
+{
+	return paused;
+}
+
+
+SDL_Surface *load_image(std::string filename)
+{
+	SDL_Surface* loadedImage = NULL;
+	SDL_Surface* optimizedImage = NULL;
+
+	loadedImage = IMG_Load(filename.c_str());
+
+	if(loadedImage != NULL)
+	{
+		optimizedImage = SDL_DisplayFormat(loadedImage);
+		SDL_FreeSurface(loadedImage);
+	}
+	return optimizedImage;
+}
+
+
+void apply_surface(int x, int y, SDL_Surface* &source, SDL_Surface* &dest)
+{
+	SDL_Rect offset;
+
+	offset.x = x;
+	offset.y = y;
+
+	SDL_BlitSurface(source, NULL, dest, &offset);
+}
+
+
+bool readMap(std::string mapname, tile lol[], int layout[])
+{
+	ifstream map;
+	map.open(mapname.c_str());
+	if(map.is_open())
+	{
+		int i=0;
+		string line, token;
+		while(getline(map,line))
+		{
+			if(i<20)
+			{
+				for(int j=0; j<line.length(); j++)
+				{
+					if(line[j]==',')
+					{
+						lol[i].texName=token;
+						token.erase(0,token.length());
+						i++;
+					}else{token+=line[j];}
+				}
+			}else if(i<100)
+			{			
+				for(int j=0;j<line.length();j++)
+				{
+					if(line[j]==',')
+					{
+						lol[i-50].state=atoi(token.c_str());
+						token.erase(0,token.length());
+						i++;
+					}else{token+=line[j];}
+				}
+			}else
+			{
+				for(int j=0;j<line.length();j++)
+				{
+					if(line[j]==',')
+					{
+						layout[i-100]=atoi(token.c_str());
+						token.erase(0,token.length());
+						i++;
+					}else{token+=line[j];}
+				}
+			}
+		}
+		map.close();
+		return true;
+	}else{return false;}
+}
+
+
+
+bool loadStage(std::string data, tile lol[], int layout[])
+{
+	if(readMap(data, lol, layout)== false)
+	{
+		MessageBox(NULL, "readMap failed.", "ALERT", MB_OK);		
+		return false;
+	}
+
+	for(int i=0;i<20;i++)
+	{
+		if(lol[i].texName!=""||"0")
+		{
+			lol[i].texture=load_image("data\\"+lol[i].texName);
+		}else{break;}
+	}
+	// MessageBox(NULL, "End loadStage.", "ALERT", MB_OK);
+	return true;
+}
+
+
+bool loadSave(std::string saveAddress, player &TheOne, tile rofl[], int grid[])
+{
+	ifstream save;
+	save.open(saveAddress.c_str());
+	if(save.is_open())
+	{
+		int offset;
+		char mapName[50];
+		save>> mapName;
+		save.ignore();
+		if(loadStage(mapName, rofl, grid))
+		{
+			save>> offset;
+			TheOne.x=offset;
+			save>> offset;
+			TheOne.y=offset;
+		}else
+		{
+			save.close();
+			return false;
+		}
+		save.close();
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
+bool createSave(std::string saveAddress, std::string mapName, player &TheOne)
+{
+	ofstream save;
+	save.open(saveAddress.c_str());
+	if(save.is_open())
+	{
+		save<< mapName<< endl;
+		save<< TheOne.x<< " ";
+		save<< TheOne.y;
+		save.close();
+		return true;
+	}
+	return false;
+}
+
+
+
+bool drawField(SDL_Surface* &screen, player &TheOne, tile lol[], int layout[])
+{
+	for(int y=0;y<MAPLENGTH;y++)
+	{
+		for(int x=0;x<MAPWIDTH;x++)
+		{
+			if(x*TILEWIDTH+TILEWIDTH > TheOne.camera.x && 
+					x*TILEWIDTH < TheOne.camera.x+TheOne.camera.w && 
+					y*TILEHEIGHT+TILEHEIGHT > TheOne.y && 
+					y*TILEHEIGHT < TheOne.camera.y+TheOne.camera.h)
+			{
+				apply_surface(x*TILEWIDTH - TheOne.camera.x, 
+						y*TILEHEIGHT - TheOne.camera.y, 
+						lol[layout[y*MAPLENGTH+x]].texture, screen);
+			}
+		}
+	}
+}
+
+
+
+int checkCollision(tile lol[], int layout[], int x, int y, int xVel, int yVel)
+{
+	if(xVel < 0)
+	{
+		x -= SPRITEWIDTH;
+	}
+	if(yVel < 0)
+	{
+		y -= SPRITEHEIGHT;
+	}
+	return (lol[layout[((y/TILEHEIGHT)*MAPWIDTH)+
+			((x+SPRITEWIDTH)/TILEWIDTH)]].state);
+}
+
+
+bool player::move(tile lol[], int layout[], Uint32 deltaTicks)
+{
+	x += xVel * (deltaTicks/1000.f);
+	y += yVel * (deltaTicks/1000.f);
+
+	if(x < 0)
+	{
+		x = 0;
+	}else if(x+SPRITEWIDTH > MAPWIDTH*TILEWIDTH)
+	{
+		x = (MAPWIDTH*TILEWIDTH) - SPRITEWIDTH;
+	}
+
+	if(y < 0)
+	{
+		y = 0;
+	}else if(y+TILEHEIGHT > MAPLENGTH*TILEHEIGHT)
+	{
+		y = (MAPLENGTH*TILEHEIGHT) - SPRITEHEIGHT;
+	}
+
+	switch(checkCollision(lol, layout, x, y, xVel, yVel))
+	{
+		case 0:
+			break;
+		case 1:
+			status=1;
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			if(xVel!=0)
+			{
+				if(xVel > 0)
+				{
+					x = ((x/TILEWIDTH)*TILEWIDTH)-1;
+				}else if(xVel < 0)
+				{
+					x = ((x/TILEWIDTH)*TILEWIDTH)+1;
+				}
+			}
+			if(yVel!=0)
+			{
+				if(yVel > 0)
+				{
+					y = ((y/TILEWIDTH)*TILEWIDTH)-1;
+				}else if(yVel < 0)
+				{
+					y = ((y/TILEWIDTH)*TILEWIDTH)+1;
+				}
+			}
+			break;
+		default:;
+	}
+}
+
+
+bool player::handleInput(/*SDL_Event event*/ Uint8 * keystates)
+{
+	/*
+	if(event.type == SDL_KEYDOWN)
+	{
+		switch(event.key.keysym.sym)
+		{
+
+			case SDLK_UP: yVel -= SPRITEHEIGHT/2; break;
+			case SDLK_DOWN: yVel += SPRITEHEIGHT/2; break;
+			case SDLK_LEFT: xVel -= SPRITEWIDTH/2; break;
+			case SDLK_RIGHT:xVel += SPRITEWIDTH/2; break;
+
+			case SDLK_UP: yVel -= PLAYERVELOCITY; break;
+			case SDLK_DOWN: yVel += PLAYERVELOCITY; break;
+			case SDLK_LEFT: xVel -= PLAYERVELOCITY; break;
+			case SDLK_RIGHT: xVel += PLAYERVELOCITY; break;
+			
+		}
+	}
+	else if(event.type == SDL_KEYUP)
+	{
+		switch(event.key.keysym.sym)
+		{
+			case SDLK_UP: yVel = 0; break;
+			case SDLK_DOWN: yVel = 0; break;
+			case SDLK_LEFT: xVel = 0; break;
+			case SDLK_RIGHT: xVel = 0; break;
+		}
+	}
+	*/
+
+	if(keystates[SDLK_RIGHT])
+	{
+		xVel = PLAYERVELOCITY;
+	}else if(keystates[SDLK_LEFT])
+	{
+		xVel = -PLAYERVELOCITY;
+	}else
+	{
+		xVel = 0;
+	}
+
+	if(keystates[SDLK_UP])
+	{
+		yVel = -PLAYERVELOCITY;
+	}else if(keystates[SDLK_DOWN])
+	{
+		yVel = PLAYERVELOCITY;
+	}else
+	{
+		yVel = 0;
+	}
+
+	return true;
+}
+
+
+
+void player::set_camera()
+{
+	camera.x = (x+SPRITEWIDTH/2) - SCREENWIDTH/2;
+	camera.y = (y+SPRITEHEIGHT/2) - SCREENHEIGHT/2;
+
+	if(camera.x < 0)
+	{
+		camera.x = 0;
+	}
+	if(camera.y < 0)
+	{
+		camera.y = 0;
+	}
+	if(camera.x+camera.w > MAPWIDTH*TILEWIDTH)
+	{
+		camera.x = (MAPWIDTH*TILEWIDTH) - camera.w;
+	}
+	if(camera.y+camera.h > MAPLENGTH*TILEHEIGHT)
+	{
+		camera.y = (MAPLENGTH*TILEHEIGHT) - camera.y;
+	}
+}
+
+
+void player::show(SDL_Surface* &screen)
+{
+	apply_surface(x-camera.x, y-camera.y, texture, screen);	
+}
+
+
+void clean_up(SDL_Surface* &screen, SDL_Surface* &buffer, player &TheOne, 
+		tile lol[])
+{
+	SDL_FreeSurface(screen);
+	SDL_FreeSurface(buffer);
+	SDL_FreeSurface(TheOne.texture);
+
+	for(int i = 0; i < 20; i++)
+	{
+		SDL_FreeSurface(lol[i].texture);
+	}
+
+	SDL_Quit();
+}
+
+
+// bool init(player &TheOne, tile lol[], int layout[])
+bool init(player &TheOne, map &world)
+{
+	if(SDL_Init(SDL_INIT_EVERYTHING) == -1)
+	{
+		return false;
+	}
+
+	/*
+	screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, SCREENBPP, 
+			SDL_SWSURFACE);
+
+	if(screen == NULL)
+	{
+		return false;
+	}
+
+	SDL_WM_SetCaption("TheEngine", NULL);
+	*/
+
+	std::string defSave = "save\\savedef";
+
+	if(!loadSave(defSave,TheOne, world.background, world.tileIndex))
+	{
+		// std::string defMap = "data\\defMap.mapx";
+		world.name = "data\\maps\\defMap.mapx";
+		TheOne.x = 1;
+		TheOne.y = 1;
+		if(!createSave(defSave, world.name, TheOne))
+		{
+			return false;
+		}
+
+		if(!loadSave(defSave, TheOne, world.background, world.tileIndex))
+		{
+			return false;
+		}
+	}
+
+	TheOne.texture=load_image("data\\player.bmp");
+	if(TheOne.texture == NULL)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+#endif

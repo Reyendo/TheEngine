@@ -1,23 +1,38 @@
 #ifndef INIT_H
 #define INIT_H
 
+#include "os.hxx"
+#include "base-classes.hxx"
+#ifdef WINDOWS
 #include <SDL\SDL.h>
-#include "misc.hxx"
+#include <windows.h>
+#endif
+#ifdef LINUX 
+#include <SDL/SDL.h>
+#endif
 
 
 
 bool init(player &TheOne, map &world)
 {
+	#ifdef WINDOWS
+	std::string defSave = "save\\savedef";
+	std::string defMap = "data\\maps\\defMap1.mapx";
+	#endif
+	#ifdef LINUX
+	std::string defSave = "save/savedef";
+	std::string defMap = "data/maps/defMap1.mapx";
+	#endif
+
 	if(SDL_Init(SDL_INIT_EVERYTHING) == -1)
 	{
 		return false;
 	}
 
-	std::string defSave = "save\\savedef";
 
 	if(!loadSave(defSave, TheOne, world))
 	{
-		world.name = "data\\maps\\defMap1.mapx";
+		world.name = defMap;
 		TheOne.x = 0;
 		TheOne.y = 0;
 		if(!createSave(defSave, world.name, TheOne))
@@ -31,7 +46,21 @@ bool init(player &TheOne, map &world)
 		}
 	}
 
+	#ifdef WINDOWS
 	TheOne.texture = load_image("data\\player.bmp");
+	TheOne.texture1 = load_image("data\\player.bmp");
+	TheOne.texture2 = load_image("data\\player.bmp");
+	TheOne.texture3 = load_image("data\\player.bmp");
+	TheOne.texture4 = load_image("data\\player.bmp");
+	#endif
+	#ifdef LINUX
+	TheOne.texture = load_image("data/player.bmp");
+	TheOne.texture1 = load_image("data/player.bmp");
+	TheOne.texture2 = load_image("data/player.bmp");
+	TheOne.texture3 = load_image("data/player.bmp");
+	TheOne.texture4 = load_image("data/player.bmp");
+	#endif
+
 	if(TheOne.texture == NULL)
 	{
 		return false;
@@ -46,6 +75,10 @@ void clean_up(window &mainWindow, map &world, player &TheOne)
 {
 	SDL_FreeSurface(mainWindow.screen);
 	SDL_FreeSurface(TheOne.texture);
+	SDL_FreeSurface(TheOne.texture1);
+	SDL_FreeSurface(TheOne.texture2);
+	SDL_FreeSurface(TheOne.texture3);
+	SDL_FreeSurface(TheOne.texture4);
 
 	for(unsigned int i=0;i<TheOne.inventory.size();i++)
 	{
@@ -70,14 +103,13 @@ void clean_up(window &mainWindow, map &world, player &TheOne)
 		SDL_FreeSurface(world.texture[i]);
 	}
 
-	for(int i=0; i<MAPSIZE; i++)
-	{
-		SDL_FreeSurface(world.tileList[i].texture);
-	}
-
 	for(unsigned int i=0;i<world.creatureList.size();i++)
 	{
 		SDL_FreeSurface(world.creatureList[i].texture);
+		SDL_FreeSurface(world.creatureList[i].texture1);
+		SDL_FreeSurface(world.creatureList[i].texture2);
+		SDL_FreeSurface(world.creatureList[i].texture3);
+		SDL_FreeSurface(world.creatureList[i].texture4);		
 	}
 
 	for(unsigned int i=0;i<world.projectiles.size();i++)
@@ -86,7 +118,7 @@ void clean_up(window &mainWindow, map &world, player &TheOne)
 		SDL_FreeSurface(world.projectiles[i].texture1);
 		SDL_FreeSurface(world.projectiles[i].texture2);
 		SDL_FreeSurface(world.projectiles[i].texture3);
-		SDL_FreeSurface(world.projectiles[i].texture4);		
+		SDL_FreeSurface(world.projectiles[i].texture4);
 	}
 
 	SDL_Quit();

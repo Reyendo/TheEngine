@@ -1,0 +1,8 @@
+#include "resource.hxx"
+
+IDB_BLACK		BITMAP	DISCARDABLE		"data\\testblock1.bmp"
+IDB_RED			BITMAP	DISCARDABLE 	"data\\testblock2.bmp"
+IDB_SPRITE		BITMAP	DISCARDABLE		"data\\testblock3.bmp"
+IDB_PLAYER		BITMAP	DISCARDABLE		"data\\testblock4.bmp"
+IDB_PLAYER2		BITMAP	DISCARDABLE		"data\\testblock5.bmp"
+IDB_TRAP		BITMAP	DISCARDABLE		"data\\testblock6.bmp"

@@ -2,17 +2,24 @@
 
 
 
+#include "os.hxx"
+#ifdef WINDOWS
+#include <SDL\SDL.h>
+#include <windows.h>
+#endif
+#ifdef LINUX 
+#include <SDL/SDL.h>
+#endif
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <stdlib.h>
-#include <SDL\SDL.h>
-#include <SDL\SDL_image.h>
+
+
+#ifdef WINDOWS
+
 #include <windows.h>
-
-
-
 
 
 void returnError()
@@ -33,22 +40,20 @@ void msgBoxInt(int x)
 	MessageBox(NULL, msg, "Alert!", MB_OK);
 }
 
+#endif
 
+#ifdef LINUX
 
-
-
-
-/*
-bool map::drawNPC(SDL_Surface *&screen, player &TheOne)
+void returnError()
 {
-	for(int i=0; i<creatureList.size();i++)
-	{
-		if(creatureList[i].x>=TheOne.camera.x&&creatureList[i].x+creatureList[i].w<=TheOne.camera.x+TheOne.camera.w&&creatureList[i].y>=TheOne.camera.y&&creatureList[i].y+creatureList[i].h<=TheOne.camera.y+TheOne.camera.h)
-		{
-			apply_surface(creatureList[i].x - TheOne.camera.x,
-					creatureList[i].y - TheOne.camera.y,
-					creatureList[i].texture, screen);
-		}
-	}
+	return;
 }
-*/
+
+
+void msgBoxInt(int x)
+{
+	return;
+}
+
+
+#endif
