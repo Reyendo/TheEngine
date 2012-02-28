@@ -3,6 +3,7 @@
 
 #include "os.hxx"
 #include "base-classes.hxx"
+#include "tools.hxx"
 #ifdef WINDOWS
 #include <SDL\SDL.h>
 #include <windows.h>
@@ -54,7 +55,8 @@ bool init(player &TheOne, map &world)
 	TheOne.texture4 = load_image("data\\player.bmp");
 	#endif
 	#ifdef LINUX
-	TheOne.texture = load_image("data/player.bmp");
+	// TheOne.texture = load_image("data/player.bmp");
+	TheOne.texture = load_image(filePath("data/player.bmp"));
 	TheOne.texture1 = load_image("data/player.bmp");
 	TheOne.texture2 = load_image("data/player.bmp");
 	TheOne.texture3 = load_image("data/player.bmp");

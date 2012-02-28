@@ -1,7 +1,7 @@
 #include "base-classes.hxx"
+
+
 #include "tools.hxx"
-
-
 #include "os.hxx"
 #include <iostream>
 #include <fstream>
@@ -94,6 +94,7 @@ creature::creature()
 player::player()
 	: weapon_drawn(false)
 	, inventoryFlag(false)
+	, interactFlag(false)
 	, keysense(0)
 {}
 
@@ -196,6 +197,11 @@ bool player::handleInput(Uint8 *keystates)
 		inventoryFlag=true;
 	}
 
+	if(keystates[SDLK_e])
+	{
+		interactFlag=true;
+	}
+
 	return true;
 }
 
@@ -233,6 +239,7 @@ bool player::move(map &map1, Uint32 deltaTicks)
 		lol = collision(*this, map1.tileList[i]);
 		if(lol)
 		{
+			/*
 			switch(map1.tileList[i].type)
 			{
 				case 5:
@@ -246,7 +253,7 @@ bool player::move(map &map1, Uint32 deltaTicks)
 					{y=map1.tileList[i].y+map1.tileList[i].h;}
 					break;
 				case 6:
-					map1.name = map1.tileList[i].link;
+					map1.name = map1.tileList[i].data;
 					map1.readMap();
 					map1.loadStage();
 					if(lol == 1)
@@ -258,6 +265,20 @@ bool player::move(map &map1, Uint32 deltaTicks)
 					else if(lol == 4)
 					{y = MAPHEIGHT - SPRITEHEIGHT;}
 					break;
+			}
+			*/
+
+
+			if(getFlag(map1.tileList[i].type, solid))
+			{
+				if(lol == 1)
+				{x=map1.tileList[i].x-SPRITEWIDTH;}
+				else if(lol == 2)
+				{x=map1.tileList[i].x+map1.tileList[i].w;}
+				else if(lol == 3)
+				{y=map1.tileList[i].y-SPRITEWIDTH;}
+				else
+				{y=map1.tileList[i].y+map1.tileList[i].h;}
 			}
 		}
 	}
@@ -480,17 +501,106 @@ void player::checkInventory(window &mainWindow)
 }
 
 
-bool player::equip(item *target)
+void player::interact(map &map1, window &mainWindow)
 {
-	weapon model;
-	if(typeid(*target)==typeid(model))
+	switch(direction)
 	{
-		primaryWeapon = *reinterpret_cast<weapon*>(target);
-		return true;
+		case 1:
+			apply_surface(x-camera.x, (y+h)-camera.y, 
+					primaryWeapon.texture1, mainWindow.screen);
+			for(unsigned int i=0; i<MAPSIZE; i++)
+			{
+				if(y+h+PLAYERREACH>map1.tileList[i].y&&y+h+PLAYERREACH<map1.tileList[i].y+map1.tileList[i].h&&((x>map1.tileList[i].x&&x<map1.tileList[i].x+map1.tileList[i].w)||(x+w<map1.tileList[i].x+map1.tileList[i].w&&x+w>map1.tileList[i].x)||(x==map1.tileList[i].x||x+w==map1.tileList[i].x+map1.tileList[i].w)))
+				{
+
+				}
+			}
+			break;
+		case 2:
+			apply_surface((x+w)-camera.x, y-camera.y,
+				   primaryWeapon.texture2, mainWindow.screen);
+			for(unsigned int i=0; i<MAPSIZE; i++)
+			{
+				if(x+w+PLAYERREACH>map1.tileList[i].x&&x+w+PLAYERREACH<map1.tileList[i].x+map1.tileList[i].w&&((y>map1.tileList[i].y&&y<map1.tileList[i].y+map1.tileList[i].h)||(y+h<map1.tileList[i].y+map1.tileList[i].h&&y+h>map1.tileList[i].y)||(y==map1.tileList[i].y||y+h==map1.tileList[i].y+map1.tileList[i].h)))
+				{
+					// ADD STUFF LATER
+				}
+			}
+			break;
+		case 3:
+			apply_surface(x-camera.x, (y-h)-camera.y,
+					primaryWeapon.texture3, mainWindow.screen);
+			for(unsigned int i=0; i<MAPSIZE; i++)
+			{
+				if(y-PLAYERREACH<map1.tileList[i].y+map1.tileList[i].h&&y-PLAYERREACH>map1.tileList[i].y&&((x>map1.tileList[i].x&&x<map1.tileList[i].x+map1.tileList[i].w)||(x+w<map1.tileList[i].x+map1.tileList[i].w&&x+w>map1.tileList[i].x)||(x==map1.tileList[i].x||x+w==map1.tileList[i].x+map1.tileList[i].w)))
+				{
+					// ADD STUFF LATER
+				}
+			}
+			break;
+		case 4:
+			apply_surface((x-w)-camera.x, y-camera.y,
+					primaryWeapon.texture4, mainWindow.screen);
+			for(unsigned int i=0; i<MAPSIZE; i++)
+			{
+				if(x-PLAYERREACH<map1.tileList[i].x+map1.tileList[i].w&&x-PLAYERREACH>map1.tileList[i].x&&((y>map1.tileList[i].y&&y<map1.tileList[i].y+map1.tileList[i].h)||(y+h<map1.tileList[i].y+map1.tileList[i].h&&y+h>map1.tileList[i].y)||(y==map1.tileList[i].y||y+h==map1.tileList[i].y+map1.tileList[i].h)))
+				{
+					// ADD STUFF LATER
+				}
+			}
+			break;
+		default:
+			break;
 	}
-	cout<<typeid(*target).name()<<endl;
-	cout<<typeid(model).name()<<endl;
-	return false;
+		switch(direction)
+	{
+		case 1:
+			apply_surface(x-camera.x, (y+h)-camera.y, 
+					primaryWeapon.texture1, mainWindow.screen);
+			for(unsigned int i=0; i<map1.creatureList.size(); i++)
+			{
+				if(y+h+PLAYERREACH>map1.creatureList[i].y&&y+h+PLAYERREACH<map1.creatureList[i].y+map1.creatureList[i].h&&((x>map1.creatureList[i].x&&x<map1.creatureList[i].x+map1.creatureList[i].w)||(x+w<map1.creatureList[i].x+map1.creatureList[i].w&&x+w>map1.creatureList[i].x)||(x==map1.creatureList[i].x||x+w==map1.creatureList[i].x+map1.creatureList[i].w)))
+				{
+					// ADD STUFF LATER
+				}
+			}
+			break;
+		case 2:
+			apply_surface((x+w)-camera.x, y-camera.y,
+				   primaryWeapon.texture2, mainWindow.screen);
+			for(unsigned int i=0; i<map1.creatureList.size(); i++)
+			{
+				if(x+w+PLAYERREACH>map1.creatureList[i].x&&x+w+PLAYERREACH<map1.creatureList[i].x+map1.creatureList[i].w&&((y>map1.creatureList[i].y&&y<map1.creatureList[i].y+map1.creatureList[i].h)||(y+h<map1.creatureList[i].y+map1.creatureList[i].h&&y+h>map1.creatureList[i].y)||(y==map1.creatureList[i].y||y+h==map1.creatureList[i].y+map1.creatureList[i].h)))
+				{
+					// ADD STUFF LATER
+				}
+			}
+			break;
+		case 3:
+			apply_surface(x-camera.x, (y-h)-camera.y,
+					primaryWeapon.texture3, mainWindow.screen);
+			for(unsigned int i=0; i<map1.creatureList.size(); i++)
+			{
+				if(y-PLAYERREACH<map1.creatureList[i].y+map1.creatureList[i].h&&y-PLAYERREACH>map1.creatureList[i].y&&((x>map1.creatureList[i].x&&x<map1.creatureList[i].x+map1.creatureList[i].w)||(x+w<map1.creatureList[i].x+map1.creatureList[i].w&&x+w>map1.creatureList[i].x)||(x==map1.creatureList[i].x||x+w==map1.creatureList[i].x+map1.creatureList[i].w)))
+				{
+					// ADD STUFF LATER
+				}
+			}
+			break;
+		case 4:
+			apply_surface((x-w)-camera.x, y-camera.y,
+					primaryWeapon.texture4, mainWindow.screen);
+			for(unsigned int i=0; i<map1.creatureList.size(); i++)
+			{
+				if(x-PLAYERREACH<map1.creatureList[i].x+map1.creatureList[i].w&&x-PLAYERREACH>map1.creatureList[i].x&&((y>map1.creatureList[i].y&&y<map1.creatureList[i].y+map1.creatureList[i].h)||(y+h<map1.creatureList[i].y+map1.creatureList[i].h&&y+h>map1.creatureList[i].y)||(y==map1.creatureList[i].y||y+h==map1.creatureList[i].y+map1.creatureList[i].h)))
+				{
+					// ADD STUFF LATER
+				}
+			}
+			break;
+		default:
+			break;
+	}
 }
 
 
@@ -705,7 +815,7 @@ bool map::readMap()
 				{
 					if(line[j] == ',')
 					{
-						tileLink[i-100] = token;
+						tileData[i-100] = token;
 						token.erase(0, token.length());
 						i++;
 					}else{token+=line[j];}
@@ -803,7 +913,7 @@ bool map::loadStage()
 			tileList[j].link = "data\\maps\\"+tileLink[layout[j]];
 			#endif
 			#ifdef LINUX
-			tileList[j].link = "data/maps/"+tileLink[layout[j]];
+			tileList[j].data = "data/maps/"+tileData[layout[j]];
 			#endif
 			tileList[j].texture = texture[layout[j]];
 			j++;
@@ -1312,4 +1422,35 @@ int collision(thing thingOne, thing thingTwo)
 	}
 
 	return 0;
+}
+
+
+bool getFlag(unsigned int flag, int which)
+{
+	unsigned int bitmap = 1;
+	flag = flag >>which;
+	flag = flag & bitmap;
+	if(flag == 1)
+	{return true;}
+	return false;
+}
+
+
+void setFlag(unsigned int &flag, int which, bool state)
+{
+	if(state)
+	{
+		unsigned int bitmap = 1;
+		bitmap = bitmap << which;
+		flag = flag | bitmap;
+	}else
+	{
+		unsigned int bitmap = 0xFFFFFFFE;
+		for(int i=0;i<which;i++)
+		{
+			bitmap = bitmap<<1;
+			bitmap++;
+		}
+		flag = flag & bitmap;
+	}
 }

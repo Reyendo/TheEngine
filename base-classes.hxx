@@ -30,6 +30,7 @@ using namespace std;
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 416
 #define SCREENBPP 32
+#define PLAYERREACH 16
 
 //
 // Possibly will change later.
@@ -40,6 +41,9 @@ using namespace std;
 #define UNASSIGNED	0
 #define WEAPON		1
 
+
+// Add namespace to isolate enum
+enum{solid, container};
 
 class thing;
 struct tile;
@@ -73,7 +77,7 @@ struct tile: public thing
 	private:
 	public:
 		int type;
-		std::string link;
+		std::string data;
 		SDL_Surface *texture;
 
 		tile();
@@ -157,6 +161,7 @@ class player: public creature
 	public:
 		bool weapon_drawn;
 		bool inventoryFlag;
+		bool interactFlag;
 		int keysense;
 		
 		std::vector<item*> inventory;
@@ -166,8 +171,8 @@ class player: public creature
 		bool handleInput(Uint8 *keystates);
 		bool move(map &world, Uint32 deltaTicks);
 		void draw_weapon(map &map1, window &mainWindow);
-		void checkInventory(window &mainWindow);		
-		bool equip(item *target);
+		void checkInventory(window &mainWindow);
+		void interact(map &map1, window &mainWindow);
 		void set_camera();
 		void show(SDL_Surface *&screen);
 };
@@ -199,8 +204,8 @@ class map
 	public:
 		std::string name;
 		std::string texName[50];
-		int tileType[50];		
-		std::string tileLink[50];
+		unsigned int tileType[50];		
+		std::string tileData[50];
 		SDL_Surface* texture[50];
 		int layout[MAPSIZE];
 		tile tileList[MAPSIZE];
@@ -260,7 +265,10 @@ SDL_Surface *load_image(std::string filename);
 bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest);
 bool loadSave(std::string saveAddress, player &TheOne, map &world);
 bool createSave(std::string saveAddress, std::string mapName, player &TheOne);
+// ADD COLLISION FUNCTION WITH RANGE PARAMETER
 int collision(thing thingOne, thing thingTwo);
+bool getFlag(unsigned int flag, int which);
+void setFlag(unsigned int &flag, int which, bool state);
 
 
 

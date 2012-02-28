@@ -1,0 +1,397 @@
+valgrind --leak-check=yes ./TheEngine > errorlog.txt
+==9989== Memcheck, a memory error detector
+==9989== Copyright (C) 2002-2011, and GNU GPL'd, by Julian Seward et al.
+==9989== Using Valgrind-3.7.0 and LibVEX; rerun with -h for copyright info
+==9989== Command: ./TheEngine
+==9989== 
+==9989== Syscall param writev(vector[...]) points to uninitialised byte(s)
+==9989==    at 0x4320E5E: writev (in /lib/libc-2.15.so)
+==9989==    by 0x40004: ???
+==9989==  Address 0x4427433 is 19 bytes inside a block of size 16,384 alloc'd
+==9989==    at 0x4029796: calloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x482D6B1: XOpenDisplay (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x408BF6B: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4097003: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4082AA8: SDL_VideoInit (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x40585D1: SDL_InitSubSystem (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x405866A: SDL_Init (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x408397B: SDL_SetVideoMode (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804CD7D: window::window() (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804A449: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Syscall param writev(vector[...]) points to uninitialised byte(s)
+==9989==    at 0x4320EA0: writev (in /lib/libc-2.15.so)
+==9989==    by 0x40004: ???
+==9989==  Address 0x442743f is 31 bytes inside a block of size 16,384 alloc'd
+==9989==    at 0x4029796: calloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x482D6B1: XOpenDisplay (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x408BF6B: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4097003: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4082AA8: SDL_VideoInit (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x40585D1: SDL_InitSubSystem (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x405866A: SDL_Init (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x408397B: SDL_SetVideoMode (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804CD7D: window::window() (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804A449: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid read of size 4
+==9989==    at 0x408020E: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a2628 is 56 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid write of size 4
+==9989==    at 0x4080216: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a2628 is 56 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid read of size 4
+==9989==    at 0x4080238: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a261c is 44 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid read of size 4
+==9989==    at 0x408023F: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a25f0 is 0 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid read of size 4
+==9989==    at 0x4080246: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a25f4 is 4 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid read of size 4
+==9989==    at 0x408025C: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a2620 is 48 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid read of size 4
+==9989==    at 0x4080272: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a260c is 28 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid read of size 4
+==9989==    at 0x4080285: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a2604 is 20 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid read of size 4
+==9989==    at 0x408028C: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a25f0 is 0 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid free() / delete / delete[] / realloc()
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x40802CF: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a26b8 is 0 bytes inside a block of size 4,096 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x40802CF: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== Invalid free() / delete / delete[] / realloc()
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==  Address 0x46a25f0 is 0 bytes inside a block of size 60 free'd
+==9989==    at 0x402A21C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408029D: SDL_FreeSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804ADEC: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 
+==9989== HEAP SUMMARY:
+==9989==     in use at exit: 538,183 bytes in 1,184 blocks
+==9989==   total heap usage: 42,446 allocs, 41,264 frees, 4,035,444 bytes allocated
+==9989== 
+==9989== 1 bytes in 1 blocks are definitely lost in loss record 1 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x485B590: _XlcDefaultMapModifiers (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x485B99A: XSetLocaleModifiers (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x40971DB: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4082AA8: SDL_VideoInit (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x40585D1: SDL_InitSubSystem (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x405866A: SDL_Init (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x408397B: SDL_SetVideoMode (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804CD7D: window::window() (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804A449: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 12 bytes in 1 blocks are definitely lost in loss record 25 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x496CEEA: ???
+==9989==    by 0x496C974: ???
+==9989==    by 0x496CD1A: ???
+==9989==    by 0x496D1E5: ???
+==9989==    by 0x496783D: ???
+==9989==    by 0x4967AFB: ???
+==9989==    by 0x408CF5B: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x40972CF: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4082AA8: SDL_VideoInit (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x40585D1: SDL_InitSubSystem (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x405866A: SDL_Init (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989== 
+==9989== 20 bytes in 2 blocks are definitely lost in loss record 31 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x42BA200: strdup (in /lib/libc-2.15.so)
+==9989==    by 0x6E69676D: ???
+==9989== 
+==9989== 112 (8 direct, 104 indirect) bytes in 1 blocks are definitely lost in loss record 170 of 261
+==9989==    at 0x402B102: realloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x48512A6: ??? (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x48517A2: ??? (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x485312F: ??? (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x48539BA: _XlcCreateLC (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x48727F9: _XlcDefaultLoader (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x485B793: _XOpenLC (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x485B8F1: _XlcCurrentLC (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x40971DB: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4082AA8: SDL_VideoInit (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x40585D1: SDL_InitSubSystem (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x405866A: SDL_Init (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989== 
+==9989== 980 (68 direct, 912 indirect) bytes in 1 blocks are definitely lost in loss record 201 of 261
+==9989==    at 0x402B102: realloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x48512A6: ??? (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x48517A2: ??? (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x485312F: ??? (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x48539BA: _XlcCreateLC (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x4876957: _XlcUtf8Loader (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x485B793: _XOpenLC (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x485B8F1: _XlcCurrentLC (in /usr/lib/libX11.so.6.3.0)
+==9989==    by 0x40971DB: ??? (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4082AA8: SDL_VideoInit (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x40585D1: SDL_InitSubSystem (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x405866A: SDL_Init (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989== 
+==9989== 4,096 bytes in 1 blocks are possibly lost in loss record 215 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x40804C5: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A80F: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,096 bytes in 1 blocks are possibly lost in loss record 216 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x40804C5: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A874: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,096 bytes in 1 blocks are possibly lost in loss record 217 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x40804C5: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A8D9: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,096 bytes in 1 blocks are possibly lost in loss record 218 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x40804C5: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A93E: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,096 bytes in 1 blocks are possibly lost in loss record 219 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x40804C5: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804F825: map::loadStage() (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x8051932: loadSave(std::string, player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x8049C45: init(player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AA2A: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,096 bytes in 1 blocks are possibly lost in loss record 220 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x40804C5: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804E35B: player::checkInventory(window&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AB4B: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 232 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A4E7: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 233 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A54C: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 234 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A5B1: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 235 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A616: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 236 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A67B: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 237 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x8049D61: init(player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AA2A: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 238 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x8049DAF: init(player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AA2A: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 239 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x8049DFD: init(player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AA2A: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 240 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x8049E4B: init(player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AA2A: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,236 (60 direct, 4,176 indirect) bytes in 1 blocks are definitely lost in loss record 241 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x8049E99: init(player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AA2A: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 4,376 (120 direct, 4,256 indirect) bytes in 2 blocks are definitely lost in loss record 242 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804E35B: player::checkInventory(window&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AB4B: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 8,472 (120 direct, 8,352 indirect) bytes in 2 blocks are definitely lost in loss record 247 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804FA57: map::loadStage() (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x8051932: loadSave(std::string, player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x8049C45: init(player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AA2A: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 8,472 (120 direct, 8,352 indirect) bytes in 2 blocks are definitely lost in loss record 248 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804FA57: map::loadStage() (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804D2D5: player::move(map&, unsigned int) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AB93: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 25,416 (360 direct, 25,056 indirect) bytes in 6 blocks are definitely lost in loss record 251 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804F825: map::loadStage() (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804D2D5: player::move(map&, unsigned int) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AB93: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 46,736 (720 direct, 46,016 indirect) bytes in 12 blocks are definitely lost in loss record 253 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804F825: map::loadStage() (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x8051932: loadSave(std::string, player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x8049C45: init(player&, map&) (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989==    by 0x804AA2A: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 80,624 (1,200 direct, 79,424 indirect) bytes in 20 blocks are definitely lost in loss record 258 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A80F: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 80,624 (1,200 direct, 79,424 indirect) bytes in 20 blocks are definitely lost in loss record 259 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A874: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 80,624 (1,200 direct, 79,424 indirect) bytes in 20 blocks are definitely lost in loss record 260 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A8D9: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== 80,624 (1,200 direct, 79,424 indirect) bytes in 20 blocks are definitely lost in loss record 261 of 261
+==9989==    at 0x402B018: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==9989==    by 0x408037C: SDL_CreateRGBSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080641: SDL_ConvertSurface (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x4080CDC: SDL_DisplayFormat (in /usr/lib/libSDL-1.2.so.0.11.4)
+==9989==    by 0x804A93E: main (in /home/reyendo/code/c++/TheEngine/TheEngine)
+==9989== 
+==9989== LEAK SUMMARY:
+==9989==    definitely lost: 6,949 bytes in 120 blocks
+==9989==    indirectly lost: 452,504 bytes in 488 blocks
+==9989==      possibly lost: 24,576 bytes in 6 blocks
+==9989==    still reachable: 54,154 bytes in 570 blocks
+==9989==         suppressed: 0 bytes in 0 blocks
+==9989== Reachable blocks (those to which a pointer was found) are not shown.
+==9989== To see them, rerun with: --leak-check=full --show-reachable=yes
+==9989== 
+==9989== For counts of detected and suppressed errors, rerun with: -v
+==9989== Use --track-origins=yes to see where uninitialised values come from
+==9989== ERROR SUMMARY: 421 errors from 43 contexts (suppressed: 0 from 0)
