@@ -25,7 +25,7 @@ tools.o: tools.cpp tools.hxx os.hxx
 	$(CC) -c tools.cpp
 
 TheEngine: $(OBJ)
-	$(CC) -o $@ $^ $(LIBS)
+	$(CC) -Wall -o $@ $^ $(LIBS)
 
 .PHONY: clean
 
