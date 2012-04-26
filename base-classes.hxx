@@ -84,6 +84,15 @@ struct tile: public thing
 };
 
 
+class container: public thing
+{
+	public:
+		SDL_Surface * texture;
+
+		container();
+};
+
+
 class item: public thing
 {
 	private:

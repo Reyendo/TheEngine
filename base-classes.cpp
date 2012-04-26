@@ -34,6 +34,14 @@ thing::thing()
 {}
 
 
+container::container()
+	: w(SPRITEWIDTH)
+	, h(SPRITEHEIGHT)
+	, xVel(0)
+	, yVel(0)
+{}
+
+
 tile::tile()
 	: type(0)
 	, texture(NULL)

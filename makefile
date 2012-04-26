@@ -30,4 +30,4 @@ TheEngine: $(OBJ)
 .PHONY: clean
 
 clean:
-	$(RM) *.o 
+	$(RM) TheEngine *.o 
