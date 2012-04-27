@@ -47,6 +47,7 @@ enum{solid, container};
 
 class thing;
 struct tile;
+class container;
 class item;
 class weapon;
 class ammo;
@@ -88,8 +89,13 @@ class container: public thing
 {
 	public:
 		SDL_Surface * texture;
+		std::vector<item*> contents;
 
 		container();
+		bool list();
+		bool put(item *newItem);
+		bool get(int index);
+		bool clear();
 };
 
 

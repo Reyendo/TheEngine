@@ -1315,6 +1315,32 @@ bool timer::is_paused()
 }
 
 
+// container
+//
+bool container::list()
+{
+	return true;
+}
+
+
+bool put(item *newItem)
+{
+	return true;
+}
+
+
+bool get(int index)
+{
+	return true;
+}
+
+
+bool clear()
+{
+	return true;
+}
+
+
 
 // UNASSORTED FUNCTIONS
 
