@@ -92,10 +92,10 @@ class container: public thing
 		std::vector<item*> contents;
 
 		container();
-		bool list();
-		bool put(item *newItem);
-		bool get(int index);
-		bool clear();
+		bool list(window &mainWindow);
+		void put(item newItem);
+		item* get(int index);
+		void clear();
 };
 
 

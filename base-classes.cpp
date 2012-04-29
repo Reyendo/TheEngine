@@ -35,10 +35,6 @@ thing::thing()
 
 
 container::container()
-	: w(SPRITEWIDTH)
-	, h(SPRITEHEIGHT)
-	, xVel(0)
-	, yVel(0)
 {}
 
 
@@ -437,12 +433,7 @@ void player::checkInventory(window &mainWindow)
 	select.y = 0;
 	select.w = 32;
 	select.h = 32;
-	#ifdef WINDOWS
-	select.texture = load_image("data\\outline.bmp");
-	#endif
-	#ifdef LINUX
-	select.texture = load_image("data/outline.bmp");
-	#endif
+	select.texture = load_image(filePath("data/outline.bmp"));
 	timer fps;
 	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255, 255, 255);
 
@@ -1317,27 +1308,109 @@ bool timer::is_paused()
 
 // container
 //
-bool container::list()
+bool container::list(window &mainWindow)
 {
+	int j = 0;
+	SDL_Event event;
+	timer fps;
+	tile select;
+	select.x = 0;
+	select.y = 0;
+	select.w = 32;
+	select.h = 32;
+	select.texture = load_image(filePath("data/outline.bmp"));
+	bool quit(false);
+	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255,255,255);
+
+	while(!quit)
+	{
+		fps.start();
+		while(SDL_PollEvent(&event))
+		{
+			mainWindow.handle_events(event);
+			if(event.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+		}
+
+		Uint8 *keystates = SDL_GetKeyState(NULL);
+		if(keystates[SDLK_q])
+		{quit = true;}
+		else if(keystates[SDLK_UP]) // FIX CODE HERE; ADD J MODIFIER?
+		{
+			select.y -= SPRITEHEIGHT*2;
+			if(select.y<0){select.y+=SPRITEHEIGHT*2;}
+		}else if(keystates[SDLK_DOWN]) // HERE TOO
+		{
+			select.y += SPRITEHEIGHT*2;
+			if(select.y+select.h>SCREENHEIGHT){select.y-=SPRITEHEIGHT*2;}
+		}else if(keystates[SDLK_RIGHT])
+		{
+			select.x += SPRITEWIDTH*2;
+			if(select.x+select.w>SCREENWIDTH)
+			{
+				select.x -= SPRITEWIDTH*2;
+				j += 1;
+			}
+		}else if(keystates[SDLK_LEFT])
+		{
+			select.x -= SPRITEWIDTH*2;
+			if(select.x-select.w<0)
+			{
+				select.x += SPRITEWIDTH*2;
+				j += 1;
+			}
+		}else if(keystates[SDLK_SPACE])
+		{
+		}
+
+		SDL_FillRect(mainWindow.screen, NULL, windowColour);
+		int itemX(0), itemY(0);
+		for(unsigned int i=0;i<contents.size();i++)
+		{
+			apply_surface(itemX, itemY, contents[i]->texture,
+					mainWindow.screen);
+			if(itemX+contents[i]->w+SPRITEWIDTH > SCREENWIDTH)
+			{
+				itemY += contents[i]->w+SPRITEWIDTH > SCREENWIDTH;
+				itemX = 0;
+			}else
+			{
+				itemX += contents[i]->w+SPRITEWIDTH;
+			}
+		}
+		apply_surface(select.x, select.y, select.texture, mainWindow.screen);
+		SDL_Flip(mainWindow.screen);
+
+		if(fps.get_ticks() < 1000/12)
+		{
+			SDL_Delay((1000/12) - fps.get_ticks());
+		}
+	}
+
 	return true;
 }
 
 
-bool put(item *newItem)
+void container::put(item newItem)
 {
-	return true;
+	item *element = &newItem;
+	contents.push_back(element);
+	return;
 }
 
 
-bool get(int index)
+item* container::get(int index)
 {
-	return true;
+	return contents[index];
 }
 
 
-bool clear()
+void container::clear()
 {
-	return true;
+	contents.erase(contents.begin(), contents.end());
+	return;
 }
 
 
