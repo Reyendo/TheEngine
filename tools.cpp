@@ -3,13 +3,7 @@
 
 
 #include "os.hxx"
-#ifdef WINDOWS
-#include <SDL\SDL.h>
-#include <windows.h>
-#endif
-#ifdef LINUX 
 #include <SDL/SDL.h>
-#endif
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -18,9 +12,6 @@
 
 
 #ifdef WINDOWS
-
-#include <windows.h>
-
 
 void returnError()
 {
@@ -40,27 +31,6 @@ void msgBoxInt(int x)
 	MessageBox(NULL, msg, "Alert!", MB_OK);
 }
 
-std::string filePath(const char* fn)
-{
-	int i = 0;
-	std::string newFn;
-	while(1)
-	{
-		if(fn[i]=='/')
-		{
-			newFn+="\\\\";
-		}else if(fn[i]=='\0')
-		{
-			return newFn;
-		}else
-		{
-			newFn+=fn[i];
-		}
-
-		i++;
-	}
-}
-
 #endif
 
 #ifdef LINUX
@@ -73,30 +43,6 @@ void returnError()
 void msgBoxInt(int x)
 {
 	return;
-}
-
-std::string filePath(const char* fn)
-{
-	int i = 0;
-	std::string newFn;
-	while(1)
-	{
-		if(fn[i]=='\\')
-		{
-			newFn+='/';
-			i++;
-		}else if(fn[i]=='\0')
-		{
-			return newFn;
-		}else
-		{
-			newFn+=fn[i];
-		}
-
-		i++;
-	}
-
-	return NULL;
 }
 
 #endif

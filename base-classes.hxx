@@ -6,13 +6,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#ifdef WINDOWS
-#include <SDL\SDL.h>
-#include <windows.h>
-#endif
-#ifdef LINUX 
 #include <SDL/SDL.h>
-#endif
+#include <SDL/SDL_ttf.h>
 
 
 using namespace std;
@@ -277,6 +272,7 @@ class timer
 
 
 SDL_Surface *load_image(std::string filename);
+TTF_Font *load_font(const char* file, int ptsize);
 bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest);
 bool loadSave(std::string saveAddress, player &TheOne, map &world);
 bool createSave(std::string saveAddress, std::string mapName, player &TheOne);

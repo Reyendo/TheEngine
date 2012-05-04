@@ -1,11 +1,6 @@
 #include "os.hxx"
-#ifdef WINDOWS
-#include <SDL\SDL.h>
-#include <windows.h>
-#endif
-#ifdef LINUX 
 #include <SDL/SDL.h>
-#endif
+#include <SDL/SDL_ttf.h>
 #include "init.hxx"
 #include "base-classes.hxx"
 #include "monsters.hxx"
@@ -18,6 +13,7 @@ int main(int argc, char* args[])
 	window mainWindow;
 	map map1;
 	SDL_Event event;
+	TTF_Font *coreFont;
 	player player1;
 	timer walkRate;
 	timer fps;
@@ -26,19 +22,11 @@ int main(int argc, char* args[])
 	weapon testWeapon;
 	testWeapon.damage = 5;
 	testWeapon.range = 17;
-	#ifdef WINDOWS
-	testWeapon.texture1 = load_image("data\\testWeapon1.bmp");
-	testWeapon.texture2 = load_image("data\\testWeapon2.bmp");
-	testWeapon.texture3 = load_image("data\\testWeapon3.bmp");
-	testWeapon.texture4 = load_image("data\\testWeapon4.bmp");
-	#endif
-	#ifdef LINUX
 	testWeapon.texture = load_image("data/testWeapon1.bmp");
 	testWeapon.texture1 = load_image("data/testWeapon1.bmp");
 	testWeapon.texture2 = load_image("data/testWeapon2.bmp");
 	testWeapon.texture3 = load_image("data/testWeapon3.bmp");
 	testWeapon.texture4 = load_image("data/testWeapon4.bmp");
-	#endif
 	// player1.primaryWeapon = testWeapon;
 	weapon testRanged;
 	testRanged.damage = 2;
@@ -53,20 +41,11 @@ int main(int argc, char* args[])
 	{
 		ammo testAmmo;		
 		testAmmo.damage = 5;
-		#ifdef WINDOWS
-		testAmmo.texture = load_image("data\\testWeapon1.bmp");
-		testAmmo.texture1 = load_image("data\\testWeapon1.bmp");
-		testAmmo.texture2 = load_image("data\\testWeapon2.bmp");
-		testAmmo.texture3 = load_image("data\\testWeapon3.bmp");
-		testAmmo.texture4 = load_image("data\\testWeapon4.bmp");
-		#endif
-		#ifdef LINUX
 		testAmmo.texture = load_image("data/testWeapon1.bmp");
 		testAmmo.texture1 = load_image("data/testWeapon1.bmp");
 		testAmmo.texture2 = load_image("data/testWeapon2.bmp");
 		testAmmo.texture3 = load_image("data/testWeapon3.bmp");
 		testAmmo.texture4 = load_image("data/testWeapon4.bmp");
-		#endif
 		player1.quiver.push_back(testAmmo);
 	}
 	// item testItem;
@@ -82,6 +61,7 @@ int main(int argc, char* args[])
 	{
 		return 1;
 	}
+	coreFont = load_font("fonts/ttf-bitstream-vera-1.10/Vera.ttf", 16);
 
 	walkRate.start();
 	while(quit == false)

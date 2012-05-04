@@ -5,6 +5,5 @@
 
 void returnError();
 void msgBoxInt(int x);
-std::string filePath(const char* fn); // Convention is Linux format.
 
 #endif

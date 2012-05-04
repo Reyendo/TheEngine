@@ -9,15 +9,9 @@
 #include <sstream>
 #include <typeinfo>
 #include <stdlib.h>
-#ifdef WINDOWS
-#include <SDL\SDL.h>
-#include <SDL\SDL_image.h>
-#include <windows.h>
-#endif
-#ifdef LINUX 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#endif
+#include <SDL/SDL_ttf.h>
 
 
 
@@ -433,7 +427,7 @@ void player::checkInventory(window &mainWindow)
 	select.y = 0;
 	select.w = 32;
 	select.h = 32;
-	select.texture = load_image(filePath("data/outline.bmp"));
+	select.texture = load_image("data/outline.bmp");
 	timer fps;
 	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255, 255, 255);
 
@@ -886,12 +880,7 @@ bool map::loadStage()
 	{
 		if(texName[i] != "" || "0")
 		{
-			#ifdef WINDOWS
-			texture[i] = load_image("data\\"+texName[i]);
-			#endif
-			#ifdef LINUX
 			texture[i] = load_image("data/"+texName[i]);
-			#endif
 		}else
 		{
 			break;
@@ -908,12 +897,7 @@ bool map::loadStage()
 			tileList[j].w = TILEWIDTH;
 			tileList[j].h = TILEHEIGHT;
 			tileList[j].type = tileType[layout[j]];
-			#ifdef WINDOWS
-			tileList[j].link = "data\\maps\\"+tileLink[layout[j]];
-			#endif
-			#ifdef LINUX
 			tileList[j].data = "data/maps/"+tileData[layout[j]];
-			#endif
 			tileList[j].texture = texture[layout[j]];
 			j++;
 		}
@@ -921,16 +905,11 @@ bool map::loadStage()
 
 	for(unsigned int i=0;i<creatureList.size();i++)
 	{
-		#ifdef WINDOWS
-		creatureList[i].texture=load_image("data\\"+creatureList[i].name);
-		#endif
-		#ifdef LINUX
 		creatureList[i].texture=load_image("data/"+creatureList[i].name);
 		if(creatureList[i].texture == NULL)
 		{
 			cout<< "load_image error."<< endl;
 		}
-		#endif
 	}
 
 	return true;
@@ -1318,7 +1297,7 @@ bool container::list(window &mainWindow)
 	select.y = 0;
 	select.w = 32;
 	select.h = 32;
-	select.texture = load_image(filePath("data/outline.bmp"));
+	select.texture = load_image("data/outline.bmp");
 	bool quit(false);
 	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255,255,255);
 
@@ -1434,6 +1413,19 @@ SDL_Surface *load_image(std::string filename)
 	}
 
 	return optimizedImage;
+}
+
+
+TTF_Font *load_font(const char* file, int ptsize)
+{
+	TTF_Font *tmpfont;
+	tmpfont = TTF_OpenFont(file, ptsize);
+	if(tmpfont = NULL)
+	{
+		cout<< "Unable to load font: "<< file<< endl;
+	}
+
+	return tmpfont;
 }
 
 

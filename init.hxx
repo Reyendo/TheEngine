@@ -4,28 +4,21 @@
 #include "os.hxx"
 #include "base-classes.hxx"
 #include "tools.hxx"
-#ifdef WINDOWS
-#include <SDL\SDL.h>
-#include <windows.h>
-#endif
-#ifdef LINUX 
 #include <SDL/SDL.h>
-#endif
+#include <SDL/SDL_ttf.h>
 
 
 
 bool init(player &TheOne, map &world)
 {
-	#ifdef WINDOWS
-	std::string defSave = "save\\savedef";
-	std::string defMap = "data\\maps\\defMap1.mapx";
-	#endif
-	#ifdef LINUX
 	std::string defSave = "save/savedef";
 	std::string defMap = "data/maps/defMap1.mapx";
-	#endif
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) == -1)
+	{
+		return false;
+	}
+	if(TTF_Init() == -1)
 	{
 		return false;
 	}
@@ -47,21 +40,12 @@ bool init(player &TheOne, map &world)
 		}
 	}
 
-	#ifdef WINDOWS
-	TheOne.texture = load_image("data\\player.bmp");
-	TheOne.texture1 = load_image("data\\player.bmp");
-	TheOne.texture2 = load_image("data\\player.bmp");
-	TheOne.texture3 = load_image("data\\player.bmp");
-	TheOne.texture4 = load_image("data\\player.bmp");
-	#endif
-	#ifdef LINUX
 	// TheOne.texture = load_image("data/player.bmp");
-	TheOne.texture = load_image(filePath("data/player.bmp"));
+	TheOne.texture = load_image("data/player.bmp");
 	TheOne.texture1 = load_image("data/player.bmp");
 	TheOne.texture2 = load_image("data/player.bmp");
 	TheOne.texture3 = load_image("data/player.bmp");
 	TheOne.texture4 = load_image("data/player.bmp");
-	#endif
 
 	if(TheOne.texture == NULL)
 	{
