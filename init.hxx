@@ -13,6 +13,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 {
 	TTF_Font *coreFont;
 	SDL_Event event;
+	std::string userIn;
 	std::string defSave = "save/savedef";
 	std::string defMap = "data/maps/defMap1.mapx";
 	timer fps;
@@ -28,11 +29,12 @@ bool init(window &mainWindow, player &TheOne, map &world)
 
 		return false;
 	}
-	coreFont = load_font("fonts/ttf-bitstream-vera-1.10/Vera.ttf", 16);
+	coreFont = load_font("fonts/ttf-bitstream-vera-1.10/VeraMoBd.ttf", 16);
 
 
 	// DISPLAY MENU SCREEN
 	//
+	int phase = 0;
 	while(1)
 	{
 		fps.start();
@@ -43,27 +45,53 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			{
 				return false;
 			}
+			switch(phase)
+			{
+				case 0:
+					stringInput(event, userIn, 20);
+					if(event.key.keysym.sym == SDLK_RETURN)
+					{
+						if(userIn != "")
+						{
+							TheOne.name = userIn;
+							userIn.clear();
+							phase++;
+						}
+					}
+					break;
+				default:
+					break;
+			}
 		}
 
 		Uint8 *keystates = SDL_GetKeyState(NULL);
 		if(keystates[SDLK_q])
 		{
 			return false;
-		}else if(keystates[SDLK_SPACE])
-		{
-			break;
 		}
 
 		SDL_FillRect(mainWindow.screen, NULL, windowColour);
-		SDL_Surface *text = drawtext(coreFont,1,1,1,1,0,0,0,1,"TESTING TEXT",
-				solid);
-		apply_surface(20, 20, text, mainWindow.screen);
+		switch(phase)
+		{
+			case 0:
+				SDL_Surface *text1 = drawtext(coreFont,1,1,1,1,0,0,0,1,
+						"Character Name:", blended);
+				SDL_Surface *text2 = drawtext(coreFont,1,1,1,1,0,0,0,1,
+						userIn.c_str(), solid);
+				break;
+			default:
+				break;
+		}
+		apply_surface(64, (SCREENHEIGHT/2)-64, text1, mainWindow.screen);
+		apply_surface(text1->w+70, (SCREENHEIGHT/2)-64, text2, mainWindow.screen);
 		SDL_Flip(mainWindow.screen);
 
-		if(fps.get_ticks() < 1000/12)
+		if(fps.get_ticks() < 1000/30)
 		{
-			SDL_Delay((1000/12) - fps.get_ticks());
+			SDL_Delay((1000/30) - fps.get_ticks());
 		}
+		if(phase > 1)
+		{break;}
 	}
 
 

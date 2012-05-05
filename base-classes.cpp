@@ -137,6 +137,8 @@ timer::timer()
 {}
 
 
+// DESTRUCTORS
+
 
 
 // BODY FUNCTIONS
@@ -1452,6 +1454,45 @@ SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char f
 	}
 
 	return resulting_text;
+}
+
+
+void stringInput(SDL_Event event, std::string &str, int charLimit)
+{
+	SDL_EnableUNICODE(SDL_ENABLE);
+	if(event.type == SDL_KEYDOWN)
+	{
+		std::string temp = str;
+
+		if(str.length() <= charLimit)
+		{
+			if(event.key.keysym.unicode == (Uint16)' ' ||
+					event.key.keysym.unicode == (Uint16)'-' ||
+					event.key.keysym.unicode == (Uint16)'_')
+			{
+				str += (char)event.key.keysym.unicode;
+			}
+			else if((event.key.keysym.unicode >= (Uint16)'0') &&
+					(event.key.keysym.unicode <= (Uint16)'9'))
+			{
+				str += (char)event.key.keysym.unicode;
+			}
+			else if((event.key.keysym.unicode >= (Uint16)'A') &&
+					(event.key.keysym.unicode <= (Uint16)'Z'))
+			{
+				str += (char)event.key.keysym.unicode;
+			}
+			else if((event.key.keysym.unicode >= (Uint16)'a') &&
+					(event.key.keysym.unicode <= (Uint16)'z'))
+			{
+				str += (char)event.key.keysym.unicode;
+			}
+		}
+		if((event.key.keysym.sym == SDLK_BACKSPACE) && (str.length() != 0))
+		{
+			str.erase(str.length() -1);
+		}
+	}
 }
 
 
