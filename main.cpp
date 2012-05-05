@@ -13,7 +13,7 @@ int main(int argc, char* args[])
 	window mainWindow;
 	map map1;
 	SDL_Event event;
-	TTF_Font *coreFont;
+	// TTF_Font *coreFont;
 	player player1;
 	timer walkRate;
 	timer fps;
@@ -57,11 +57,10 @@ int main(int argc, char* args[])
 	// TESTING END
 
 
-	if(init(player1, map1) == false)
+	if(init(mainWindow, player1, map1) == false)
 	{
 		return 1;
 	}
-	coreFont = load_font("fonts/ttf-bitstream-vera-1.10/Vera.ttf", 16);
 
 	walkRate.start();
 	while(quit == false)

@@ -9,10 +9,14 @@
 
 
 
-bool init(player &TheOne, map &world)
+bool init(window &mainWindow, player &TheOne, map &world)
 {
+	TTF_Font *coreFont;
+	SDL_Event event;
 	std::string defSave = "save/savedef";
 	std::string defMap = "data/maps/defMap1.mapx";
+	timer fps;
+	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format,255,255,255);
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) == -1)
 	{
@@ -20,7 +24,46 @@ bool init(player &TheOne, map &world)
 	}
 	if(TTF_Init() == -1)
 	{
+		cout<< "TTF_Init() failed"<< endl;
+
 		return false;
+	}
+	coreFont = load_font("fonts/ttf-bitstream-vera-1.10/Vera.ttf", 16);
+
+
+	// DISPLAY MENU SCREEN
+	//
+	while(1)
+	{
+		fps.start();
+		while(SDL_PollEvent(&event))
+		{
+			mainWindow.handle_events(event);
+			if(event.type == SDL_QUIT)
+			{
+				return false;
+			}
+		}
+
+		Uint8 *keystates = SDL_GetKeyState(NULL);
+		if(keystates[SDLK_q])
+		{
+			return false;
+		}else if(keystates[SDLK_SPACE])
+		{
+			break;
+		}
+
+		SDL_FillRect(mainWindow.screen, NULL, windowColour);
+		SDL_Surface *text = drawtext(coreFont,1,1,1,1,0,0,0,1,"TESTING TEXT",
+				solid);
+		apply_surface(20, 20, text, mainWindow.screen);
+		SDL_Flip(mainWindow.screen);
+
+		if(fps.get_ticks() < 1000/12)
+		{
+			SDL_Delay((1000/12) - fps.get_ticks());
+		}
 	}
 
 

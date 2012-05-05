@@ -38,7 +38,8 @@ using namespace std;
 
 
 // Add namespace to isolate enum
-enum{solid, container};
+// enum{solid, container};
+enum textquality{solid, shaded, blended};
 
 class thing;
 struct tile;
@@ -273,6 +274,7 @@ class timer
 
 SDL_Surface *load_image(std::string filename);
 TTF_Font *load_font(const char* file, int ptsize);
+SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char fgA, char bgR, char bgG, char bgB, char bgA, const char* text, textquality quality);
 bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest);
 bool loadSave(std::string saveAddress, player &TheOne, map &world);
 bool createSave(std::string saveAddress, std::string mapName, player &TheOne);

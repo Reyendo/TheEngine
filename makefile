@@ -3,7 +3,7 @@ ifdef SystemRoot
 	LIBS = -lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_ttf
 else
 	RM = rm -f
-	LIBS = -lSDLmain -lSDL -lSDL_image
+	LIBS = -lSDLmain -lSDL -lSDL_image -lSDL_ttf
 endif
 
 CC=g++
