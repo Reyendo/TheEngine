@@ -1,9 +1,11 @@
 ifdef SystemRoot
 	RM = del /Q
 	LIBS = -lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_ttf
+	FLAGS = -mwindows
 else
 	RM = rm -f
 	LIBS = -lSDLmain -lSDL -lSDL_image -lSDL_ttf
+	FLAGS = 
 endif
 
 CC=g++
@@ -25,7 +27,7 @@ tools.o: tools.cpp tools.hxx os.hxx
 	$(CC) -c tools.cpp
 
 TheEngine: $(OBJ)
-	$(CC) -Wall -o $@ $^ $(LIBS)
+	$(CC) -Wall -o $@ $^ $(LIBS) $(FLAGS)
 
 .PHONY: clean
 

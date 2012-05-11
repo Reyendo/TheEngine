@@ -13,6 +13,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 {
 	TTF_Font *coreFont;
 	SDL_Event event;
+	SDL_Surface *text1, *text2;
 	std::string userIn;
 	std::string defSave = "save/savedef";
 	std::string defMap = "data/maps/defMap1.mapx";
@@ -45,17 +46,44 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			{
 				return false;
 			}
+			SDL_FillRect(mainWindow.screen,NULL,windowColour);
 			switch(phase)
 			{
 				case 0:
-					stringInput(event, userIn, 20);
-					if(event.key.keysym.sym == SDLK_RETURN)
 					{
-						if(userIn != "")
+						if(event.key.keysym.sym == SDLK_RETURN)
 						{
-							TheOne.name = userIn;
-							userIn.clear();
-							phase++;
+							if(userIn != "")
+							{
+								TheOne.name = userIn;
+								userIn.clear();
+								while(SDL_PollEvent(&event))
+								{
+									if(event.key.keysym.sym == SDLK_RETURN)
+									{
+										cout<< "OH MY GOD"<< endl;
+									}
+								}
+								phase=1;
+							}
+						}
+
+						stringInput(event, userIn, 20);
+						text1 = drawtext(coreFont,1,1,1,1,0,0,0,1,
+								"Character Name:", blended);
+						text2 = drawtext(coreFont,1,1,1,1,0,0,0,1,
+								userIn.c_str(), solid);
+					}
+					break;
+				case 1:
+					{
+						text1 = drawtext(coreFont,1,1,1,1,0,0,0,1,
+								"Greetings,", blended);
+						text2 = drawtext(coreFont,1,1,1,1,0,0,0,1,
+								TheOne.name.c_str(), blended);
+						if(event.key.keysym.sym == SDLK_RETURN)
+						{
+							phase=2;
 						}
 					}
 					break;
@@ -64,31 +92,15 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			}
 		}
 
-		Uint8 *keystates = SDL_GetKeyState(NULL);
-		if(keystates[SDLK_q])
-		{
-			return false;
-		}
-
-		SDL_FillRect(mainWindow.screen, NULL, windowColour);
-		switch(phase)
-		{
-			case 0:
-				SDL_Surface *text1 = drawtext(coreFont,1,1,1,1,0,0,0,1,
-						"Character Name:", blended);
-				SDL_Surface *text2 = drawtext(coreFont,1,1,1,1,0,0,0,1,
-						userIn.c_str(), solid);
-				break;
-			default:
-				break;
-		}
-		apply_surface(64, (SCREENHEIGHT/2)-64, text1, mainWindow.screen);
-		apply_surface(text1->w+70, (SCREENHEIGHT/2)-64, text2, mainWindow.screen);
+		apply_surface(64, (SCREENHEIGHT/2)-64,text1,
+				mainWindow.screen);
+		apply_surface(text1->w+70, (SCREENHEIGHT/2)-64,
+				text2, mainWindow.screen);
 		SDL_Flip(mainWindow.screen);
 
-		if(fps.get_ticks() < 1000/30)
+		if(fps.get_ticks() < 1000/10)
 		{
-			SDL_Delay((1000/30) - fps.get_ticks());
+			SDL_Delay((1000/10) - fps.get_ticks());
 		}
 		if(phase > 1)
 		{break;}
