@@ -46,7 +46,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			{
 				return false;
 			}
-			SDL_FillRect(mainWindow.screen,NULL,windowColour);
+
 			switch(phase)
 			{
 				case 0:
@@ -55,6 +55,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 						{
 							if(userIn != "")
 							{
+								// cout<< "User pressed Enter!!!"<< endl;
 								TheOne.name = userIn;
 								userIn.clear();
 								while(SDL_PollEvent(&event))
@@ -83,6 +84,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 								TheOne.name.c_str(), blended);
 						if(event.key.keysym.sym == SDLK_RETURN)
 						{
+							// cout<< "Enter pressed!!!"<< endl;
 							phase=2;
 						}
 					}
@@ -92,15 +94,17 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			}
 		}
 
+		// cout<< "Displaying text"<< endl;
+		SDL_FillRect(mainWindow.screen,NULL,windowColour);
 		apply_surface(64, (SCREENHEIGHT/2)-64,text1,
 				mainWindow.screen);
 		apply_surface(text1->w+70, (SCREENHEIGHT/2)-64,
 				text2, mainWindow.screen);
 		SDL_Flip(mainWindow.screen);
 
-		if(fps.get_ticks() < 1000/10)
+		if(fps.get_ticks() < 1000/50)
 		{
-			SDL_Delay((1000/10) - fps.get_ticks());
+			SDL_Delay((1000/50) - fps.get_ticks());
 		}
 		if(phase > 1)
 		{break;}
