@@ -772,8 +772,9 @@ void npc::move(map &map1, player &TheOne, Uint32 deltaTicks)
 //
 bool map::readMap()
 {
+	std::string mapAddress = "data/maps/"+name+".mapx";
 	ifstream map;
-	map.open(name.c_str());
+	map.open(mapAddress.c_str());
 	if(map.is_open())
 	{
 		creatureList.clear();
@@ -1511,8 +1512,26 @@ bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest)
 }
 
 
-bool loadSave(std::string saveAddress, player &TheOne, map &map1)
+bool createSave(std::string saveName, std::string mapName, player &TheOne)
 {
+	std::string saveAddress = "save/"+saveName+".sav";
+	ofstream save;
+	save.open(saveAddress.c_str());
+	if(save.is_open())
+	{
+		save<< mapName<< endl;
+		save<< TheOne.x<< " "<< TheOne.y;
+		save.close();
+
+		return true;
+	}
+	return false;
+}
+
+
+bool loadSave(std::string saveName, map &map1, player &TheOne)
+{
+	std::string saveAddress = "save/"+saveName+".sav";
 	ifstream save;
 	save.open(saveAddress.c_str());
 	if(save.is_open())
@@ -1537,23 +1556,6 @@ bool loadSave(std::string saveAddress, player &TheOne, map &map1)
 	{
 		return false;
 	}
-}
-
-
-bool createSave(std::string saveAddress, std::string mapName, player &TheOne)
-{
-	ofstream save;
-	save.open(saveAddress.c_str());
-	if(save.is_open())
-	{
-		save<< mapName<< endl;
-		save<< TheOne.x<< " ";
-		save<< TheOne.y;
-		save.close();
-
-		return true;
-	}
-	return false;
 }
 
 
