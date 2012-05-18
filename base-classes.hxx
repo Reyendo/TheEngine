@@ -193,8 +193,6 @@ class npc: public creature
 {
 	private:
 	public:
-		std::string name;
-
 		npc();
 		virtual bool think(player &TheOne);		
 		virtual void move(map &map1, player &TheOne, Uint32 deltaTicks);
@@ -277,7 +275,8 @@ TTF_Font *load_font(const char* file, int ptsize);
 SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char fgA, char bgR, char bgG, char bgB, char bgA, const char* text, textquality quality);
 void stringInput(SDL_Event event, std::string &str, int charLimit);
 bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest);
-bool createSave(std::string saveName, std::string mapName, player &TheOne);
+// bool createSave(std::string saveName, std::string mapName, player &TheOne);
+bool createSave(std::string saveName, map &map1, player &TheOne);
 bool loadSave(std::string saveName, map &world, player &TheOne);
 // ADD COLLISION FUNCTION WITH RANGE PARAMETER
 int collision(thing thingOne, thing thingTwo);

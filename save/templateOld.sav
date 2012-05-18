@@ -1,0 +1,2 @@
+(char *CURRENTMAP)
+(int playerX) (int playerY)

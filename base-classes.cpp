@@ -1512,11 +1512,13 @@ bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest)
 }
 
 
-bool createSave(std::string saveName, std::string mapName, player &TheOne)
+// bool createSave(std::string saveName, std::string mapName, player &TheOne)
+bool createSave(std::string saveName, map &map1, player &TheOne)
 {
 	std::string saveAddress = "save/"+saveName+".sav";
 	ofstream save;
 	save.open(saveAddress.c_str());
+	/*
 	if(save.is_open())
 	{
 		save<< mapName<< endl;
@@ -1525,6 +1527,40 @@ bool createSave(std::string saveName, std::string mapName, player &TheOne)
 
 		return true;
 	}
+	*/
+	if(save.is_open())
+	{
+		save<< TheOne.name<< " "<< TheOne.x<< " "<< TheOne.y<< " "
+			<< TheOne.hp<< " "<< TheOne.mp<< " "<< TheOne.status<< " "
+			<< TheOne.strength<< " "<< TheOne.endurance<< " "
+			<< TheOne.agility<< " "<< TheOne.intelligence<< " "
+			<< TheOne.charisma<< " "<< TheOne.wisdom<< " "
+			<< TheOne.will<< " "<< TheOne.direction<< endl;
+			// add further stats as needed
+		save<< map1.name<< endl;
+		for(unsigned int i=0; i<map1.creatureList.size();i++)
+		{
+			save<< map1.creatureList[i].name<< " "
+				<< map1.creatureList[i].x<< " "
+				<< map1.creatureList[i].y<< " "
+				<< map1.creatureList[i].hp<< " "
+				<< map1.creatureList[i].mp<< " "
+				<< map1.creatureList[i].status<< " "
+				<< map1.creatureList[i].strength<< " "
+				<< map1.creatureList[i].endurance<< " "
+				<< map1.creatureList[i].agility<< " "
+				<< map1.creatureList[i].intelligence<< " "
+				<< map1.creatureList[i].charisma<< " "
+				<< map1.creatureList[i].wisdom<< " "
+				<< map1.creatureList[i].will<< " "
+				<< map1.creatureList[i].direction<< endl;
+				// add further stats as needed
+		}
+		save.close();
+
+		return true;
+	}
+
 	return false;
 }
 
@@ -1534,6 +1570,7 @@ bool loadSave(std::string saveName, map &map1, player &TheOne)
 	std::string saveAddress = "save/"+saveName+".sav";
 	ifstream save;
 	save.open(saveAddress.c_str());
+	/*
 	if(save.is_open())
 	{
 		int offset;
@@ -1552,6 +1589,20 @@ bool loadSave(std::string saveName, map &map1, player &TheOne)
 			save.close();
 			return false;
 		}
+	}else
+	{
+		return false;
+	}
+	*/
+	if(save.is_open())
+	{
+		int offset = 0;
+		save>> TheOne.name;
+		save>> offset;
+		TheOne.x = offset;
+		save>> offset;
+		TheOne.y = offset;
+		// FINISH THIS YOU ASSHOLE
 	}else
 	{
 		return false;
