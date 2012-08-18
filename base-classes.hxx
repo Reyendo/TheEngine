@@ -141,6 +141,7 @@ class creature: public thing
 	private:
 	public:
 		std::string name;
+		int direction;
 		int race;
 		int hp;
 		int mp;
@@ -158,7 +159,6 @@ class creature: public thing
 		SDL_Surface* texture3;
 		SDL_Surface* texture4;
 		SDL_Rect camera;
-		int direction;
 		weapon primaryWeapon;
 
 		creature();

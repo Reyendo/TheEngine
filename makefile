@@ -2,13 +2,15 @@ ifdef SystemRoot
 	RM = del /Q
 	LIBS = -lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_ttf
 	FLAGS = -mwindows
+	BIN = TheEngine.exe
 else
 	RM = rm -f
 	LIBS = -lSDLmain -lSDL -lSDL_image -lSDL_ttf
 	FLAGS = 
+	BIN = TheEngine
 endif
 
-CC=g++
+CC = g++
 
 OBJ = main.o base-classes.o monsters.o tools.o
 
@@ -32,4 +34,4 @@ TheEngine: $(OBJ)
 .PHONY: clean
 
 clean:
-	$(RM) TheEngine *.o 
+	$(RM) $(BIN) *.o 

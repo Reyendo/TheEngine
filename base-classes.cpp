@@ -1512,22 +1512,11 @@ bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest)
 }
 
 
-// bool createSave(std::string saveName, std::string mapName, player &TheOne)
 bool createSave(std::string saveName, map &map1, player &TheOne)
 {
 	std::string saveAddress = "save/"+saveName+".sav";
 	ofstream save;
 	save.open(saveAddress.c_str());
-	/*
-	if(save.is_open())
-	{
-		save<< mapName<< endl;
-		save<< TheOne.x<< " "<< TheOne.y;
-		save.close();
-
-		return true;
-	}
-	*/
 	if(save.is_open())
 	{
 		save<< TheOne.name<< " "<< TheOne.x<< " "<< TheOne.y<< " "
@@ -1543,6 +1532,7 @@ bool createSave(std::string saveName, map &map1, player &TheOne)
 			save<< map1.creatureList[i].name<< " "
 				<< map1.creatureList[i].x<< " "
 				<< map1.creatureList[i].y<< " "
+				<< map1.creatureList[i].direction<< " "
 				<< map1.creatureList[i].hp<< " "
 				<< map1.creatureList[i].mp<< " "
 				<< map1.creatureList[i].status<< " "
@@ -1552,9 +1542,8 @@ bool createSave(std::string saveName, map &map1, player &TheOne)
 				<< map1.creatureList[i].intelligence<< " "
 				<< map1.creatureList[i].charisma<< " "
 				<< map1.creatureList[i].wisdom<< " "
-				<< map1.creatureList[i].will<< " "
-				<< map1.creatureList[i].direction<< endl;
-				// add further stats as needed
+				<< map1.creatureList[i].will<< endl;
+				// add further stuff as needed
 		}
 		save.close();
 
@@ -1570,30 +1559,6 @@ bool loadSave(std::string saveName, map &map1, player &TheOne)
 	std::string saveAddress = "save/"+saveName+".sav";
 	ifstream save;
 	save.open(saveAddress.c_str());
-	/*
-	if(save.is_open())
-	{
-		int offset;
-		save>> map1.name;
-		save.ignore();
-		if(map1.readMap() && map1.loadStage())
-		{
-			save>> offset;
-			TheOne.x = offset;
-			save>> offset;
-			TheOne.y = offset;
-			save.close();
-			return true;
-		}else
-		{
-			save.close();
-			return false;
-		}
-	}else
-	{
-		return false;
-	}
-	*/
 	if(save.is_open())
 	{
 		int offset = 0;
@@ -1602,11 +1567,44 @@ bool loadSave(std::string saveName, map &map1, player &TheOne)
 		TheOne.x = offset;
 		save>> offset;
 		TheOne.y = offset;
+		save>> offset;
+		TheOne.direction = offset;
+		save>> offset;
+		TheOne.hp = offset;
+		save>> offset;
+		TheOne.mp = offset;
+		save>> offset;
+		TheOne.status = offset;
+		save>> offset;
+		TheOne.strength = offset;
+		save>> offset;
+		TheOne.endurance = offset;
+		save>> offset;
+		TheOne.agility = offset;
+		save>> offset;
+		TheOne.intelligence = offset;
+		save>> offset;
+		TheOne.charisma = offset;
+		save>> offset;
+		TheOne.wisdom = offset;
+		save>> offset;
+		TheOne.will = offset;
+		// DOING THIS IN A LOOP WOULD BE FAR MORE ELEGANT.
+		save.ignore();
+		save>> map1.name;
+		if(map1.readMap() && map1.loadStage())
+		{
+		}else
+		{
+			save.close();
+			return false;
+		}
 		// FINISH THIS YOU ASSHOLE
 	}else
 	{
 		return false;
 	}
+	return true;
 }
 
 

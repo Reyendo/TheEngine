@@ -31,8 +31,8 @@ bool init(window &mainWindow, player &TheOne, map &world)
 
 		return false;
 	}
-	coreFont = load_font("fonts/ttf-bitstream-vera-1.10/VeraMoBd.ttf", 16);
-	headerFont = load_font("fonts/ttf-bitstream-vera-1.10/VeraMoBd.ttf", 24);
+	coreFont = load_font("data/fonts/ttf-bitstream-vera-1.10/VeraMoBd.ttf", 16);
+	headerFont = load_font("data/fonts/ttf-bitstream-vera-1.10/VeraMoBd.ttf", 24);
 
 
 	// DISPLAY MENU SCREEN
@@ -47,6 +47,10 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			"Character Name:", blended);
 	text4 = drawtext(coreFont,1,1,1,1,0,0,0,1,
 			"Greetings,", blended);
+	if(SDL_EnableKeyRepeat(500,30) > 0)
+	{
+		cout<< "SDL_EnableKeyRepeat 1 failed."<< endl;
+	}
 	while(1)
 	{
 		fps.start();
@@ -85,7 +89,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 						world.name = defMap;
 						TheOne.x = 0;
 						TheOne.y = 0;
-						if(!createSave(TheOne.name, world.name, TheOne))
+						if(!createSave(TheOne.name, world, TheOne))
 						{
 							return false;
 						}
@@ -95,15 +99,24 @@ bool init(window &mainWindow, player &TheOne, map &world)
 							return false;
 						}
 						userIn.clear();
-						phase = 3;
+						phase = 2;
 					}else
 					{
 						stringInput(event,userIn,20);
 					}
 					break;
-				case 3:
+				case 2:
 					if(event.key.keysym.sym == SDLK_RETURN)
-						phase = 4;
+					{
+						/*
+						if(SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
+								SDL_DEFAULT_REPEAT_INTERVAL)<0)
+						{
+							cout<< "SDL_EnableKeyRepeat 2 failed."<< endl;
+						}
+						*/
+						phase = 3;
+					}
 					break;
 				default:
 					break;

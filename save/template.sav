@@ -1,5 +1,5 @@
 # PLAYER
-(char *PLAYERNAME) (int playerX) (int playerY) (int playerStats...)
+(char *PLAYERNAME) (int playerX) (int playerY) (int playerDirection) (int playerStats...)
 # CURRENT MAP
 (char *CURRENTMAPNAME)
 (char *MONSTERNAME) (int monsterX) (int monsterY) (int monsterStats...)
