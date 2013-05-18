@@ -1,2 +1,0 @@
-Unable to load font: data/fonts/ttf-bitstream-vera-1.10/VeraMoBd.ttf
-Unable to load font: data/fonts/ttf-bitstream-vera-1.10/VeraMoBd.ttf
