@@ -2,36 +2,36 @@ ifdef SystemRoot
 	RM = del /Q
 	LIBS = -lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_ttf
 	FLAGS = -mwindows
-	BIN = TheEngine.exe
+	BIN = ../bin/TheEngine.exe
 else
 	RM = rm -f
 	LIBS = -lSDLmain -lSDL -lSDL_image -lSDL_ttf
 	FLAGS = 
-	BIN = TheEngine
+	BIN = ../bin/TheEngine
 endif
 
 CC = g++
 
-OBJ = main.o base-classes.o monsters.o tools.o
+OBJ = ../bin/main.o ../bin/base-classes.o ../bin/monsters.o ../bin/	tools.o
 
 all: TheEngine
 
 main.o: main.cpp init.hxx base-classes.hxx monsters.hxx tools.hxx os.hxx
-	$(CC) -c main.cpp
+	$(CC) -c main.cpp -o ../bin/main.o
 
 base-classes.o: base-classes.cpp base-classes.hxx tools.hxx os.hxx
-	$(CC) -c base-classes.cpp
+	$(CC) -c base-classes.cpp -o ../bin/base-classes.o
 
 monsters.o: monsters.cpp monsters.hxx base-classes.hxx os.hxx
-	$(CC) -c monsters.cpp
+	$(CC) -c monsters.cpp -o ../bin/monsters.o
 
 tools.o: tools.cpp tools.hxx os.hxx
-	$(CC) -c tools.cpp
+	$(CC) -c tools.cpp -o ../bin/tools.o
 
 TheEngine: $(OBJ)
-	$(CC) -Wall -o $@ $^ $(LIBS) $(FLAGS)
+	$(CC) -Wall -o ../bin/$@ $^ $(LIBS) $(FLAGS)
 
 .PHONY: clean
 
 clean:
-	$(RM) $(BIN) *.o 
+	$(RM) "$(BIN)" "../bin/*.o" 
