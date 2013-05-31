@@ -99,6 +99,7 @@ class item: public thing
 {
 	private:
 	public:
+		//SDL_Surface* texture[5];
 		SDL_Surface* texture;
 		SDL_Surface* texture1;
 		SDL_Surface* texture2;
@@ -153,11 +154,13 @@ class creature: public thing
 		int charisma;
 		int wisdom;
 		int will;
+		//SDL_Surface* texture[5];
 		SDL_Surface* texture;
 		SDL_Surface* texture1;
 		SDL_Surface* texture2;
 		SDL_Surface* texture3;
 		SDL_Surface* texture4;
+
 		SDL_Rect camera;
 		weapon primaryWeapon;
 

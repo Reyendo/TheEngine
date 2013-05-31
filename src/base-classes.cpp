@@ -53,7 +53,9 @@ weapon::weapon()
 	, effect(0)
 	, range(0)
 	, ranged(false)
-{type = WEAPON;}
+{
+	type = WEAPON;
+}
 
 
 ammo::ammo()
@@ -429,7 +431,7 @@ void player::checkInventory(window &mainWindow)
 	select.y = 0;
 	select.w = 32;
 	select.h = 32;
-	select.texture = load_image("data/outline.bmp");
+	select.texture = load_image("../data/outline.bmp");
 	timer fps;
 	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255, 255, 255);
 
@@ -772,7 +774,7 @@ void npc::move(map &map1, player &TheOne, Uint32 deltaTicks)
 //
 bool map::readMap()
 {
-	std::string mapAddress = "data/maps/"+name+".mapx";
+	std::string mapAddress = "../data/maps/"+name+".mapx";
 	ifstream map;
 	map.open(mapAddress.c_str());
 	if(map.is_open())
@@ -883,7 +885,7 @@ bool map::loadStage()
 	{
 		if(texName[i] != "" || "0")
 		{
-			texture[i] = load_image("data/"+texName[i]);
+			texture[i] = load_image("../data/sprites/"+texName[i]);
 		}else
 		{
 			break;
@@ -900,7 +902,7 @@ bool map::loadStage()
 			tileList[j].w = TILEWIDTH;
 			tileList[j].h = TILEHEIGHT;
 			tileList[j].type = tileType[layout[j]];
-			tileList[j].data = "data/maps/"+tileData[layout[j]];
+			tileList[j].data = "../data/maps/"+tileData[layout[j]];
 			tileList[j].texture = texture[layout[j]];
 			j++;
 		}
@@ -908,7 +910,8 @@ bool map::loadStage()
 
 	for(unsigned int i=0;i<creatureList.size();i++)
 	{
-		creatureList[i].texture=load_image("data/"+creatureList[i].name);
+		creatureList[i].texture=load_image("../data/sprites/"+
+				creatureList[i].name);
 		if(creatureList[i].texture == NULL)
 		{
 			cout<< "load_image error."<< endl;
@@ -1300,7 +1303,7 @@ bool container::list(window &mainWindow)
 	select.y = 0;
 	select.w = 32;
 	select.h = 32;
-	select.texture = load_image("data/outline.bmp");
+	select.texture = load_image("../data/outline.bmp");
 	bool quit(false);
 	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255,255,255);
 
@@ -1461,6 +1464,7 @@ SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char f
 void stringInput(SDL_Event event, std::string &str, int charLimit)
 {
 	SDL_EnableUNICODE(SDL_ENABLE);
+	// if(event.type == SDL_KEYDOWN)
 	if(event.type == SDL_KEYDOWN)
 	{
 		std::string temp = str;
@@ -1514,7 +1518,7 @@ bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest)
 
 bool createSave(std::string saveName, map &map1, player &TheOne)
 {
-	std::string saveAddress = "save/"+saveName+".sav";
+	std::string saveAddress = "../save/"+saveName+".sav";
 	ofstream save;
 	save.open(saveAddress.c_str());
 	if(save.is_open())
@@ -1556,7 +1560,7 @@ bool createSave(std::string saveName, map &map1, player &TheOne)
 
 bool loadSave(std::string saveName, map &map1, player &TheOne)
 {
-	std::string saveAddress = "save/"+saveName+".sav";
+	std::string saveAddress = "../save/"+saveName+".sav";
 	ifstream save;
 	save.open(saveAddress.c_str());
 	if(save.is_open())

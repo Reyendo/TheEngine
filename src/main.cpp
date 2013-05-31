@@ -22,30 +22,50 @@ int main(int argc, char* args[])
 	weapon testWeapon;
 	testWeapon.damage = 5;
 	testWeapon.range = 17;
-	testWeapon.texture = load_image("data/testWeapon1.bmp");
-	testWeapon.texture1 = load_image("data/testWeapon1.bmp");
-	testWeapon.texture2 = load_image("data/testWeapon2.bmp");
-	testWeapon.texture3 = load_image("data/testWeapon3.bmp");
-	testWeapon.texture4 = load_image("data/testWeapon4.bmp");
+	testWeapon.texture = load_image("../data/sprites/testWeapon1.bmp");
+	testWeapon.texture1 = load_image("../data/sprites/testWeapon1.bmp");
+	testWeapon.texture2 = load_image("../data/sprites/testWeapon2.bmp");
+	testWeapon.texture3 = load_image("../data/sprites/testWeapon3.bmp");
+	testWeapon.texture4 = load_image("../data/sprites/testWeapon4.bmp");
+	/*
+	for(int i=0;i<5;i++)
+	{
+		testWeapon.texture[i] = 
+			load_image("../data/sprites/testWeapon"+i+".bmp");
+	}
+	*/
 	// player1.primaryWeapon = testWeapon;
 	weapon testRanged;
 	testRanged.damage = 2;
-	testRanged.texture = load_image("data/testWeapon2.bmp");
-	testRanged.texture1 = load_image("data/testWeapon2.bmp");
-	testRanged.texture2 = load_image("data/testWeapon2.bmp");
-	testRanged.texture3 = load_image("data/testWeapon2.bmp");
-	testRanged.texture4 = load_image("data/testWeapon2.bmp");
+	testRanged.texture = load_image("../data/sprites/testWeapon2.bmp");
+	testRanged.texture1 = load_image("../data/sprites/testWeapon2.bmp");
+	testRanged.texture2 = load_image("../data/sprites/testWeapon2.bmp");
+	testRanged.texture3 = load_image("../data/sprites/testWeapon2.bmp");
+	testRanged.texture4 = load_image("../data/sprites/testWeapon2.bmp");
+	/*
+	for(int i=0;i<5;i++)
+	{
+		testRanged.texture[i] = load_image("../data/sprites/testWeapon2.bmp");
+	}
+	*/
 	testRanged.ranged = true;
 	player1.primaryWeapon = testRanged;
 	for(int i=0;i<20;i++)
 	{
 		ammo testAmmo;		
 		testAmmo.damage = 5;
-		testAmmo.texture = load_image("data/testWeapon1.bmp");
-		testAmmo.texture1 = load_image("data/testWeapon1.bmp");
-		testAmmo.texture2 = load_image("data/testWeapon2.bmp");
-		testAmmo.texture3 = load_image("data/testWeapon3.bmp");
-		testAmmo.texture4 = load_image("data/testWeapon4.bmp");
+		testAmmo.texture = load_image("../data/sprites/testWeapon1.bmp");
+		testAmmo.texture1 = load_image("../data/sprites/testWeapon1.bmp");
+		testAmmo.texture2 = load_image("../data/sprites/testWeapon2.bmp");
+		testAmmo.texture3 = load_image("../data/sprites/testWeapon3.bmp");
+		testAmmo.texture4 = load_image("../data/sprites/testWeapon4.bmp");
+		/*
+		for(int i=0;i<5;i++)
+		{
+			testAmmo.texture[i] = load_image("../data/sprites/testWeapon"
+					+i+".bmp");
+		}
+		*/
 		player1.quiver.push_back(testAmmo);
 	}
 	// item testItem;
