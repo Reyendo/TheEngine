@@ -1,13 +1,12 @@
 #ifndef BASE_CLASSES_H
 #define BASE_CLASSES_H
 
-
-#include "os.hxx"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#include "os.hxx"
 
 
 using namespace std;
@@ -41,23 +40,27 @@ using namespace std;
 // enum{solid, container};
 enum textquality{solid, shaded, blended};
 
+
+// CLASS DECLARATION
+//
+class ammo;
+class container;
+class creature;
+class enemy;
+class item;
+class map;
+class npc;
+class player;
 class thing;
 struct tile;
-class container;
-class item;
-class weapon;
-class ammo;
-class creature;
-class player;
-class npc;
-class enemy;
-class map;
-class window;
 class timer;
+class weapon;
+class window;
 
 
 
-
+// CLASS DEFINITION
+//
 class thing
 {
 	private:
@@ -83,6 +86,7 @@ struct tile: public thing
 
 class container: public thing
 {
+	private:
 	public:
 		SDL_Surface * texture;
 		std::vector<item*> contents;
@@ -99,12 +103,7 @@ class item: public thing
 {
 	private:
 	public:
-		//SDL_Surface* texture[5];
-		SDL_Surface* texture;
-		SDL_Surface* texture1;
-		SDL_Surface* texture2;
-		SDL_Surface* texture3;
-		SDL_Surface* texture4;
+		SDL_Surface* texture[5];
 		// Change type? V
 		int type;
 
@@ -154,13 +153,7 @@ class creature: public thing
 		int charisma;
 		int wisdom;
 		int will;
-		//SDL_Surface* texture[5];
-		SDL_Surface* texture;
-		SDL_Surface* texture1;
-		SDL_Surface* texture2;
-		SDL_Surface* texture3;
-		SDL_Surface* texture4;
-
+		SDL_Surface* texture[5];
 		SDL_Rect camera;
 		weapon primaryWeapon;
 
@@ -283,8 +276,8 @@ bool createSave(std::string saveName, map &map1, player &TheOne);
 bool loadSave(std::string saveName, map &world, player &TheOne);
 // ADD COLLISION FUNCTION WITH RANGE PARAMETER
 int collision(thing thingOne, thing thingTwo);
-bool getFlag(unsigned int flag, int which);
-void setFlag(unsigned int &flag, int which, bool state);
+bool getFlag(unsigned int, int);
+void setFlag(unsigned int&, int, bool);
 
 
 

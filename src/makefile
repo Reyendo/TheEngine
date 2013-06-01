@@ -34,4 +34,4 @@ TheEngine: $(OBJ)
 .PHONY: clean
 
 clean:
-	$(RM) "$(BIN)" "../bin/*.o" 
+	$(RM) "$(BIN)" "../bin/*.o" "../bin/stdout.txt" "../bin/stderr.txt"

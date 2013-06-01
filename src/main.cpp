@@ -1,9 +1,10 @@
-#include "os.hxx"
+#include <cstdlib>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
-#include "init.hxx"
 #include "base-classes.hxx"
+#include "init.hxx"
 #include "monsters.hxx"
+#include "os.hxx"
 #include "tools.hxx"
 
 
@@ -15,61 +16,38 @@ int main(int argc, char* args[])
 	SDL_Event event;
 	// TTF_Font *coreFont;
 	player player1;
-	timer walkRate;
-	timer fps;
+	timer walkRate,fps;
 
 	// TESTING BEGIN
 	weapon testWeapon;
 	testWeapon.damage = 5;
 	testWeapon.range = 17;
-	testWeapon.texture = load_image("../data/sprites/testWeapon1.bmp");
-	testWeapon.texture1 = load_image("../data/sprites/testWeapon1.bmp");
-	testWeapon.texture2 = load_image("../data/sprites/testWeapon2.bmp");
-	testWeapon.texture3 = load_image("../data/sprites/testWeapon3.bmp");
-	testWeapon.texture4 = load_image("../data/sprites/testWeapon4.bmp");
-	/*
 	for(int i=0;i<5;i++)
 	{
-		testWeapon.texture[i] = 
-			load_image("../data/sprites/testWeapon"+i+".bmp");
+		char tempIteratorString[40];
+		snprintf(tempIteratorString,40,"../data/sprites/testWeapon%d.bmp",i);
+		testWeapon.texture[i] = load_image(tempIteratorString);
 	}
-	*/
-	// player1.primaryWeapon = testWeapon;
 	weapon testRanged;
 	testRanged.damage = 2;
-	testRanged.texture = load_image("../data/sprites/testWeapon2.bmp");
-	testRanged.texture1 = load_image("../data/sprites/testWeapon2.bmp");
-	testRanged.texture2 = load_image("../data/sprites/testWeapon2.bmp");
-	testRanged.texture3 = load_image("../data/sprites/testWeapon2.bmp");
-	testRanged.texture4 = load_image("../data/sprites/testWeapon2.bmp");
-	/*
 	for(int i=0;i<5;i++)
 	{
 		testRanged.texture[i] = load_image("../data/sprites/testWeapon2.bmp");
 	}
-	*/
 	testRanged.ranged = true;
 	player1.primaryWeapon = testRanged;
 	for(int i=0;i<20;i++)
 	{
 		ammo testAmmo;		
 		testAmmo.damage = 5;
-		testAmmo.texture = load_image("../data/sprites/testWeapon1.bmp");
-		testAmmo.texture1 = load_image("../data/sprites/testWeapon1.bmp");
-		testAmmo.texture2 = load_image("../data/sprites/testWeapon2.bmp");
-		testAmmo.texture3 = load_image("../data/sprites/testWeapon3.bmp");
-		testAmmo.texture4 = load_image("../data/sprites/testWeapon4.bmp");
-		/*
 		for(int i=0;i<5;i++)
 		{
-			testAmmo.texture[i] = load_image("../data/sprites/testWeapon"
-					+i+".bmp");
+			char tempIteratorString[40];
+			snprintf(tempIteratorString,40,"../data/sprites/testWeapon%d.bmp",i);
+			testAmmo.texture[i] = load_image(tempIteratorString);
 		}
-		*/
 		player1.quiver.push_back(testAmmo);
 	}
-	// item testItem;
-	// testItem.texture = load_image("data\\testWeapon1.bmp");
 	weapon *testPointer1 = &testWeapon;
 	weapon *testPointer2 = &testRanged;
 	player1.inventory.push_back(testPointer1);
