@@ -235,30 +235,49 @@ bool player::move(map &map1, Uint32 deltaTicks)
 		y = (MAPHEIGHT*TILEHEIGHT) - SPRITEHEIGHT;
 	}
 	
-	int lol;
+	int direction(0);
 	for(int i=0;i<MAPSIZE;i++)
 	{
-		lol = collision(*this, map1.tileList[i]);
-		if(lol)
+		direction = collision(*this, map1.tileList[i]);
+		if(direction)
 		{
 			if(getFlag(map1.tileList[i].type, solid))
 			{
-				if(lol == 1)
+				if(direction == 1)
 				{x=map1.tileList[i].x-SPRITEWIDTH;}
-				else if(lol == 2)
+				else if(direction == 2)
 				{x=map1.tileList[i].x+map1.tileList[i].w;}
-				else if(lol == 3)
+				else if(direction == 3)
 				{y=map1.tileList[i].y-SPRITEWIDTH;}
 				else
 				{y=map1.tileList[i].y+map1.tileList[i].h;}
 			}
+			/*
+			// Code for handling doors
+			//
+			if(getFlag(map1.tileList[i].type, portal))
+			{
+				map1.name = map1.tileList[i].data;
+				map1.readMap();
+				map1.loadStage();
+				if(lol == 1)
+				{x = 0;}
+				else if(lol == 2)
+				{x = MAPWIDTH-SPRITEWIDTH;}
+				else if(lol == 3)
+				{y = 0;}
+				else if(lol == 4)
+				{y = MAPHEIGHT - SPRITEHEIGHT;}
+				break;
+			}
+			*/
 		}
 	}
 
 	for(unsigned int i=0; i<map1.creatureList.size();i++)
 	{
-		lol = collision(*this, map1.creatureList[i]);
-		switch(lol)
+		direction = collision(*this, map1.creatureList[i]);
+		switch(direction)
 		{
 			case 1:
 				x=map1.creatureList[i].x-SPRITEWIDTH;
@@ -750,7 +769,28 @@ bool map::readMap()
 	if(map.is_open())
 	{
 		creatureList.clear();
+		
+		for(int i=0;i<50;i++)
+		{
+			int tempInt = 0;
+			char tempString[64] = {0};
+			map.read(tempString,sizeof(char)*32);
+			texName[i] = tempString;
+			map.read((char *)&tempInt,sizeof(int));
+			tileType[i] = tempInt;
+			memset(tempString,0,64);
+			map.read(tempString,sizeof(char)*32);
+			tileData[i] = tempString;
+		}
+		
+		for(int i=0;i<MAPSIZE;i++)
+		{
+			int tempInt = 0;
+			map.read((char *)&tempInt, sizeof(int));
+			layout[i] = tempInt;
+		}
 
+		/*
 		int i(0);
 		string line, token;
 		while(getline(map, line))
@@ -839,6 +879,7 @@ bool map::readMap()
 				}
 			}
 		}
+		*/
 
 		map.close();
 		return true;

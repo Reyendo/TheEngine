@@ -15,7 +15,8 @@ bool init(window &mainWindow, player &TheOne, map &world)
 	SDL_Event event;
 	SDL_Surface *text1, *text2, *text3, *text4, *text5;
 	std::string userIn;
-	std::string defMap = "defMap1";
+	//std::string defMap = "defMap1";
+	std::string defMap = "testMap";
 	timer fps;
 	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format,255,255,255);
 	bool quit = false;
