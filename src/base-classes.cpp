@@ -241,7 +241,7 @@ bool player::move(map &map1, Uint32 deltaTicks)
 		direction = collision(*this, map1.tileList[i]);
 		if(direction)
 		{
-			if(getFlag(map1.tileList[i].type, solid))
+			if(getFlag(map1.tileList[i].type, tileType::solid))
 			{
 				if(direction == 1)
 				{x=map1.tileList[i].x-SPRITEWIDTH;}

@@ -29,7 +29,7 @@ int main()
 
 		memcpy(tileNameBuffer,"testblock1.bmp",sizeof("testblock1.bmp"));
 		tileType = 1;
-		memset(tileDataBuffer,0,tileDataSize);		
+		memset(tileDataBuffer,0,tileDataSize);
 		map.write(tileNameBuffer,tileNameSize);
 		map.write((char *)&tileType,sizeof(int));
 		map.write(tileDataBuffer,tileDataSize);

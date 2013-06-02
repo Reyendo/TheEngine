@@ -14,7 +14,6 @@ int main(int argc, char* args[])
 	window mainWindow;
 	map map1;
 	SDL_Event event;
-	// TTF_Font *coreFont;
 	player player1;
 	timer walkRate,fps;
 

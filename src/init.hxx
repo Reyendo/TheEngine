@@ -49,16 +49,106 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			"Character Name:", blended);
 	text4 = drawtext(coreFont,1,1,1,1,0,0,0,1,
 			"Greetings,", blended);
-	/*
-	if(SDL_EnableKeyRepeat(0,0) != 0)
+
+	if(SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL) != 0)
 	{
-		cout<< "SDL_EnableKeyRepeat 1 failed."<< endl;
+		cout<< "SDL_EnableKeyRepeat failed."<< endl;
 	}else{cout<< "SDL_EnableKeyRepeat succeeded."<< endl;}
-	*/
-	cout<< "Width:  "<< text2->w<< endl;
-	cout<< "Height: "<< text2->h<< endl;
+
 	while(!quit)
 	{
+		fps.start();
+		while(SDL_PollEvent(&event))
+		{
+			mainWindow.handle_events(event);
+			if(event.type == SDL_QUIT)
+			{
+				return false;
+			}
+
+			SDL_FillRect(mainWindow.screen,NULL,windowColour);
+			switch(phase)
+			{
+				case 0: 
+					if(event.key.keysym.sym == SDLK_UP)
+					{
+						if(iterator > 0)
+						{iterator--;}
+					}else if(event.key.keysym.sym == SDLK_DOWN)
+					{
+						if(iterator < 1)
+						{iterator++;}
+					}else if(event.key.keysym.sym == SDLK_RETURN)
+					{
+						if(iterator == 0)
+						{
+							phase = 1;
+						}else if(iterator == 1)
+						{
+							phase = 2;
+						}
+					}
+					apply_surface((SCREENWIDTH/2)-(text1->w/2),(SCREENHEIGHT/2)-30,
+							text1,mainWindow.screen);
+					apply_surface((SCREENWIDTH/2)-(text2->w/2),(SCREENHEIGHT/2)+30,
+							text2,mainWindow.screen);
+					break;
+				case 1:
+					if(event.key.keysym.sym==SDLK_RETURN && userIn.size()>0)
+					{
+						TheOne.name = userIn;
+						world.name = defMap;
+						TheOne.x = 0;
+						TheOne.y = 0;
+						if(!createSave(TheOne.name, world, TheOne))
+						{
+							return false;
+						}
+
+						if(!loadSave(TheOne.name, world, TheOne))
+						{
+							return false;
+						}
+						userIn.clear();
+						phase = 2;
+					}else
+					{
+						stringInput(event,userIn,20);
+					}
+					text5 = drawtext(coreFont,1,1,1,1,0,0,0,1,
+							userIn.c_str(),solid);
+					apply_surface(64,(SCREENHEIGHT/2)-64,text3,
+							mainWindow.screen);
+					apply_surface(text3->w+70,(SCREENHEIGHT/2)-64,
+							text5,mainWindow.screen);
+					break;
+				case 2:
+					if(event.key.keysym.sym = SDLK_RETURN)
+					{
+						phase = 3;
+					}
+					text5 = drawtext(coreFont,1,1,1,1,0,0,0,1,
+							TheOne.name.c_str(),solid);
+					apply_surface(54,(SCREENHEIGHT/2)-(text4->h/2),text4,
+							mainWindow.screen);
+					apply_surface(text4->w+70,(SCREENHEIGHT/2)-(text5->h/2),
+							text5,mainWindow.screen);
+					break;
+				default:
+					quit = true;
+					break;
+			}
+		}
+		SDL_Flip(mainWindow.screen);
+
+		if(fps.get_ticks() < 1000/5)
+		{
+			SDL_Delay((1000/5) - fps.get_ticks());
+		}
+	}
+
+
+		/*
 		fps.start();
 		while(SDL_PollEvent(&event))
 		{
@@ -114,13 +204,6 @@ bool init(window &mainWindow, player &TheOne, map &world)
 				case 2:
 					if(event.key.keysym.sym == SDLK_RETURN)
 					{
-						/*
-						if(SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
-								SDL_DEFAULT_REPEAT_INTERVAL) < 0)
-						{
-							cout<< "SDL_EnableKeyRepeat 2 failed."<< endl;
-						}
-						*/
 						phase = 3;
 					}
 					break;
@@ -170,6 +253,12 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			SDL_Delay((1000/5) - fps.get_ticks());
 		}
 	}
+	*/
+
+	if(SDL_EnableKeyRepeat(0,0) != 0)
+	{
+		cout<< "SDL_EnableKeyRepeat failed."<< endl;
+	}else{cout<< "SDL_EnableKeyRepeat succeeded."<< endl;}
 
 	for(int i=0;i<5;i++)
 	{

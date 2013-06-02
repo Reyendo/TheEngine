@@ -36,8 +36,11 @@ using namespace std;
 #define WEAPON		1
 
 
-// Add namespace to isolate enum
-// enum{solid, container};
+namespace tileType
+{
+	enum{solid, container};
+}
+
 enum textquality{solid, shaded, blended};
 
 
