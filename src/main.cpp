@@ -4,8 +4,6 @@
 #include "base-classes.hxx"
 #include "init.hxx"
 #include "monsters.hxx"
-#include "os.hxx"
-#include "tools.hxx"
 
 
 int main(int argc, char* args[])

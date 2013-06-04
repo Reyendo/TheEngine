@@ -13,7 +13,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 {
 	TTF_Font *coreFont, *headerFont;
 	SDL_Event event;
-	SDL_Surface *text1, *text2, *text3, *text4, *text5;
+	SDL_Surface *text1, *text2, *text3, *text4, *text5,*outline;
 	std::string userIn;
 	//std::string defMap = "defMap1";
 	std::string defMap = "testMap";
@@ -49,11 +49,15 @@ bool init(window &mainWindow, player &TheOne, map &world)
 			"Character Name:", blended);
 	text4 = drawtext(coreFont,1,1,1,1,0,0,0,1,
 			"Greetings,", blended);
+	outline = load_image("../data/sprites/outline2.bmp");
+	if(outline == NULL)
+	{
+		cout<< "Error: outline was not loaded"<< endl;
+	}
+
 
 	if(SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL) != 0)
-	{
-		cout<< "SDL_EnableKeyRepeat failed."<< endl;
-	}else{cout<< "SDL_EnableKeyRepeat succeeded."<< endl;}
+	{cout<< "SDL_EnableKeyRepeat failed."<< endl;}
 
 	while(!quit)
 	{
@@ -92,6 +96,15 @@ bool init(window &mainWindow, player &TheOne, map &world)
 							text1,mainWindow.screen);
 					apply_surface((SCREENWIDTH/2)-(text2->w/2),(SCREENHEIGHT/2)+30,
 							text2,mainWindow.screen);
+					if(iterator == 0)
+					{
+						apply_surface((SCREENWIDTH/2)-(outline->w/2),
+								(SCREENHEIGHT/2)-30,outline,mainWindow.screen);
+					}else if(iterator == 1)
+					{
+						apply_surface((SCREENWIDTH/2)-(outline->w/2),
+								(SCREENHEIGHT/2)+30,outline,mainWindow.screen);
+					}
 					break;
 				case 1:
 					if(event.key.keysym.sym==SDLK_RETURN && userIn.size()>0)
@@ -256,9 +269,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 	*/
 
 	if(SDL_EnableKeyRepeat(0,0) != 0)
-	{
-		cout<< "SDL_EnableKeyRepeat failed."<< endl;
-	}else{cout<< "SDL_EnableKeyRepeat succeeded."<< endl;}
+	{cout<< "SDL_EnableKeyRepeat failed."<< endl;}
 
 	for(int i=0;i<5;i++)
 	{

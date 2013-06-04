@@ -420,7 +420,7 @@ void player::checkInventory(window &mainWindow)
 	select.y = 0;
 	select.w = 32;
 	select.h = 32;
-	select.texture = load_image("../data/outline.bmp");
+	select.texture = load_image("../data/sprites/outline.bmp");
 	timer fps;
 	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255, 255, 255);
 
@@ -918,6 +918,13 @@ bool map::loadStage()
 			j++;
 		}
 	}
+	mapBuffer=SDL_CreateRGBSurface(SDL_SWSURFACE,MAPWIDTH*SPRITEWIDTH,
+			MAPHEIGHT*SPRITEHEIGHT,SCREENBPP,0,0,0,0);
+	for(int i=0;i<MAPSIZE;i++)
+	{
+		apply_surface(tileList[i].x,tileList[i].y,
+				tileList[i].texture,mapBuffer);
+	}
 
 	for(unsigned int i=0;i<creatureList.size();i++)
 	{
@@ -1051,6 +1058,7 @@ void map::projectileLoop(player &TheOne, Uint32 deltaTicks)
 
 bool map::drawField(SDL_Surface *&screen, player &TheOne)
 {
+	/*
 	for(int i=0; i<MAPSIZE; i++)
 	{
 		if(tileList[i].x>=TheOne.camera.x &&
@@ -1063,6 +1071,72 @@ bool map::drawField(SDL_Surface *&screen, player &TheOne)
 					tileList[i].texture, screen);
 		}
 	}
+	*/
+	
+	/*
+	for(int i=0;i<MAPSIZE;i++)
+	{
+		if(tileList[i].x+tileList[i].w >= TheOne.camera.x &&
+				tileList[i].x <= TheOne.camera.x+TheOne.camera.w &&
+				tileList[i].y+tileList[i].h >= TheOne.camera.y &&
+				tileList[i].y <= TheOne.camera.y+TheOne.camera.h)
+		{
+			if(tileList[i].x>=TheOne.camera.x &&
+					tileList[i].x+tileList[i].w<=TheOne.camera.x+TheOne.camera.w &&
+					tileList[i].y>=TheOne.camera.y &&
+					tileList[i].y+tileList[i].h<=TheOne.camera.y+TheOne.camera.h)
+			{
+				apply_surface(tileList[i].x - TheOne.camera.x,
+						tileList[i].y - TheOne.camera.y,
+						tileList[i].texture, screen);
+			}else
+			{
+				SDL_Rect offset,clipRect;
+				if(tileList[i].x < TheOne.camera.x)
+				{
+					offset.x=0;
+					clipRect.x = TheOne.camera.x-tileList[i].x;
+				}else if(tileList[i].x+tileList[i].w>
+						TheOne.camera.x+TheOne.camera.w)
+				{
+					offset.x=tileList[i].x-TheOne.camera.x;
+					clipRect.w=(TheOne.camera.x+TheOne.camera.w)-tileList[i].x;
+				}
+				if(tileList[i].y < TheOne.camera.y)
+				{
+					offset.y=0;
+					clipRect.y = TheOne.camera.y - tileList[i].y;
+				}else if(tileList[i].y+tileList[i].h>
+						TheOne.camera.y+TheOne.camera.h)
+				{
+					offset.y=TheOne.camera.y-tileList[i].y;
+					clipRect.h=(TheOne.camera.y+TheOne.camera.h)-tileList[i].y;
+				}
+				if(SDL_BlitSurface(tileList[i].texture,&offset,screen,&clipRect) > -1)
+				{
+					return false;
+				}
+			}
+		}
+	}
+	*/
+
+	/*
+	for(int i=0;i<MAPSIZE;i++)
+	{
+		if(tileList[i].x+tileList[i].w >= TheOne.camera.x &&
+				tileList[i].x <= TheOne.camera.x+TheOne.camera.w &&
+				tileList[i].y+tileList[i].h >= TheOne.camera.y &&
+				tileList[i].y <= TheOne.camera.y+TheOne.camera.h)
+		{
+			apply_surface(tileList[i].x - TheOne.camera.x,
+					tileList[i].y - TheOne.camera.y,
+					tileList[i].texture, screen);
+		}
+	}
+	*/
+
+	apply_surface(-TheOne.camera.x,-TheOne.camera.y,mapBuffer,screen);
 	
 	return true;
 }

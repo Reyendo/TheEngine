@@ -1,5 +1,5 @@
 #ifdef SystemRoot
-	#define WINDOWS
+	#define OS_WINDOWS
 #else
-	#define LINUX
+	#define OS_LINUX
 #endif

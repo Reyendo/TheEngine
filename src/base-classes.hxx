@@ -6,9 +6,6 @@
 #include <vector>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
-#include "os.hxx"
-
-
 using namespace std;
 
 
@@ -215,6 +212,7 @@ class map
 		unsigned int tileType[50];		
 		std::string tileData[50];
 		SDL_Surface* texture[50];
+		SDL_Surface* mapBuffer;	// Testing new display method.
 		int layout[MAPSIZE];
 		tile tileList[MAPSIZE];
 		std::vector<npc> creatureList;
