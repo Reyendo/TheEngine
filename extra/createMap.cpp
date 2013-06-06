@@ -102,6 +102,38 @@ int main()
 
 		map.write((char *)grid,sizeof(int)*(100)*(100));
 
+		char npcNameBuffer[tileNameSize] = {'\0'};
+		int npcX,npcY,npcW,npcH,npcHP = 0;
+		
+		memcpy(npcNameBuffer,"testblock2.bmp",sizeof("testblock2.bmp"));
+		npcX = 256;
+		npcY = 256;
+		npcW = 32;
+		npcH = 32;
+		npcHP = 15;
+		map.write(npcNameBuffer,tileNameSize);
+		map.write((char *)&npcX,sizeof(int));
+		map.write((char *)&npcY,sizeof(int));
+		map.write((char *)&npcW,sizeof(int));
+		map.write((char *)&npcH,sizeof(int));
+		map.write((char *)&npcHP,sizeof(int));
+
+		for(int i=0;i<50;i++)
+		{
+			memset(npcNameBuffer,'\0',tileNameSize);
+			npcX = 0;
+			npcY = 0;
+			npcW = 0;
+			npcH = 0;
+			npcHP = 0;
+			map.write(npcNameBuffer,tileNameSize);
+			map.write((char *)&npcX,sizeof(int));
+			map.write((char *)&npcY,sizeof(int));
+			map.write((char *)&npcW,sizeof(int));
+			map.write((char *)&npcH,sizeof(int));
+			map.write((char *)&npcHP,sizeof(int));
+		}
+
 
 		/*
 		char tileNameBuffer[tileNameSize] = {NULL};

@@ -32,7 +32,6 @@ int main(int argc, char* args[])
 		testRanged.texture[i] = load_image("../data/sprites/testWeapon2.bmp");
 	}
 	testRanged.ranged = true;
-	player1.primaryWeapon = testRanged;
 	for(int i=0;i<20;i++)
 	{
 		ammo testAmmo;		
@@ -45,10 +44,11 @@ int main(int argc, char* args[])
 		}
 		player1.quiver.push_back(testAmmo);
 	}
-	weapon *testPointer1 = &testWeapon;
-	weapon *testPointer2 = &testRanged;
-	player1.inventory.push_back(testPointer1);
-	player1.inventory.push_back(testPointer2);
+	weapon *testPointer = &testWeapon;
+	player1.inventory.push_back(testPointer);
+	testPointer = &testRanged;
+	player1.inventory.push_back(testPointer);
+	player1.primaryWeapon = testWeapon;
 	// TESTING END
 
 
@@ -93,9 +93,8 @@ int main(int argc, char* args[])
 		map1.drawField(mainWindow.screen, player1);
 		map1.drawNPC(mainWindow.screen, player1);
 		player1.show(mainWindow.screen);
-		if(player1.weapon_drawn == true){
-			player1.draw_weapon(map1, mainWindow);
-		}
+		if(player1.weapon_drawn == true)
+		{player1.draw_weapon(map1, mainWindow);}
 		map1.drawProjectiles(mainWindow.screen, player1);
 		map1.cleanUp();
 

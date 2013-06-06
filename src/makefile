@@ -19,7 +19,7 @@ all: TheEngine
 ../bin/main.o: main.cpp init.hxx base-classes.hxx monsters.hxx tools.hxx
 	$(CC) -c main.cpp -o ../bin/main.o
 
-../bin/base-classes.o: base-classes.cpp base-classes.hxx tools.hxx
+../bin/base-classes.o: base-classes.cpp base-classes.hxx
 	$(CC) -c base-classes.cpp -o ../bin/base-classes.o
 
 ../bin/monsters.o: monsters.cpp monsters.hxx base-classes.hxx

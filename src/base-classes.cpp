@@ -1,19 +1,17 @@
 #include "base-classes.hxx"
 
 
-#include "tools.hxx"
-#include "os.hxx"
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <sstream>
-#include <typeinfo>
 #include <stdlib.h>
+#include <string>
+#include <typeinfo>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
-
-
+#include "tools.hxx"
+using namespace std;
 
 
 // CONSTRUCTORS
@@ -39,8 +37,7 @@ tile::tile()
 
 
 item::item()
-	: 
-	type(UNASSIGNED)
+	: type(itemType::unassigned)
 {
 	for(int i=0;i<5;i++)
 	{
@@ -55,7 +52,7 @@ weapon::weapon()
 	, range(0)
 	, ranged(false)
 {
-	type = WEAPON;
+	type = itemType::weapon;
 }
 
 
@@ -235,7 +232,6 @@ bool player::move(map &map1, Uint32 deltaTicks)
 		y = (MAPHEIGHT*TILEHEIGHT) - SPRITEHEIGHT;
 	}
 	
-	int direction(0);
 	for(int i=0;i<MAPSIZE;i++)
 	{
 		direction = collision(*this, map1.tileList[i]);
@@ -433,21 +429,25 @@ void player::checkInventory(window &mainWindow)
 			mainWindow.handle_events(event);
 			if(event.type == SDL_QUIT)
 			{
-				quit = true;
+				exit(0);
 			}
 		}
 
 		Uint8 *keystates = SDL_GetKeyState(NULL);
 		if(keystates[SDLK_q])
 		{quit=true;}
-		else if(keystates[SDLK_UP]) // FIX CODE HERE; ADD J MODIFIER
+		else if(keystates[SDLK_UP])
 		{
+			j -= SCREENHEIGHT/(SPRITEHEIGHT*2);
 			select.y -= SPRITEHEIGHT*2;
-			if(select.y<0){select.y+=SPRITEHEIGHT*2;}
-		}else if(keystates[SDLK_DOWN]) // HERE TOO
+			if(select.y<0){select.y+=SPRITEHEIGHT*2;
+				j+=SCREENHEIGHT/(SPRITEHEIGHT*2);}
+		}else if(keystates[SDLK_DOWN])
 		{
+			j += SCREENHEIGHT/(SPRITEHEIGHT*2);
 			select.y += SPRITEHEIGHT*2;
-			if(select.y+select.h>SCREENHEIGHT){select.y-=SPRITEHEIGHT*2;}
+			if(select.y+select.h>SCREENHEIGHT){select.y-=SPRITEHEIGHT*2;
+				j-=SCREENHEIGHT/(SPRITEHEIGHT*2);}
 		}else if(keystates[SDLK_RIGHT])
 		{
 			j += 1;
@@ -460,7 +460,7 @@ void player::checkInventory(window &mainWindow)
 			if(select.x<0){select.x+=SPRITEWIDTH*2; j+=1;}
 		}else if(keystates[SDLK_SPACE])
 		{
-			if(inventory[j]->type == WEAPON)
+			if(inventory[j]->type == itemType::weapon)
 			{
 				primaryWeapon = *reinterpret_cast<weapon*>(inventory[j]);
 			}
@@ -788,6 +788,21 @@ bool map::readMap()
 			int tempInt = 0;
 			map.read((char *)&tempInt, sizeof(int));
 			layout[i] = tempInt;
+		}
+
+		for(int i=0;i<50;i++)
+		{
+			char tempString[64] = {0};
+			npc tempNPC;
+			map.read(tempString,sizeof(char)*32);
+			tempNPC.name=tempString;
+			map.read((char *)&tempNPC.x,sizeof(int));
+			map.read((char *)&tempNPC.y,sizeof(int));
+			map.read((char *)&tempNPC.w,sizeof(int));
+			map.read((char *)&tempNPC.h,sizeof(int));
+			map.read((char *)&tempNPC.hp,sizeof(int));
+			if(tempNPC.name[0] != '\0')
+			{creatureList.push_back(tempNPC);}
 		}
 
 		/*
@@ -1407,11 +1422,11 @@ bool container::list(window &mainWindow)
 		Uint8 *keystates = SDL_GetKeyState(NULL);
 		if(keystates[SDLK_q])
 		{quit = true;}
-		else if(keystates[SDLK_UP]) // FIX CODE HERE; ADD J MODIFIER?
+		else if(keystates[SDLK_UP])
 		{
 			select.y -= SPRITEHEIGHT*2;
 			if(select.y<0){select.y+=SPRITEHEIGHT*2;}
-		}else if(keystates[SDLK_DOWN]) // HERE TOO
+		}else if(keystates[SDLK_DOWN])
 		{
 			select.y += SPRITEHEIGHT*2;
 			if(select.y+select.h>SCREENHEIGHT){select.y-=SPRITEHEIGHT*2;}
@@ -1520,23 +1535,24 @@ TTF_Font *load_font(const char* file, int ptsize)
 }
 
 
-SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char fgA, char bgR, char bgG,char bgB, char bgA, const char* text, textquality quality)
+SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char fgA, char bgR, char bgG,char bgB, char bgA, const char* text, 
+		textType::textquality quality)
 {
 	SDL_Color tmpfontcolor = {fgR, fgG, fgB, fgA};
 	SDL_Color tmpfontbgcolor = {bgR, bgG, bgB, bgA};
 	SDL_Surface *resulting_text;
 
-	if(quality == solid)
+	if(quality == textType::solid)
 	{
 		resulting_text = TTF_RenderText_Solid(fonttodraw, 
 			text, tmpfontcolor);
 	}
-	else if(quality == shaded)
+	else if(quality == textType::shaded)
 	{
 		resulting_text = TTF_RenderText_Shaded(fonttodraw,
 			text, tmpfontcolor, tmpfontbgcolor);
 	}
-	else if(quality == blended)
+	else if(quality == textType::blended)
 	{
 		resulting_text = 
 		TTF_RenderText_Blended(fonttodraw, text, tmpfontcolor);
@@ -1549,7 +1565,6 @@ SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char f
 void stringInput(SDL_Event event, std::string &str, int charLimit)
 {
 	SDL_EnableUNICODE(SDL_ENABLE);
-	// if(event.type == SDL_KEYDOWN)
 	if(event.type == SDL_KEYDOWN)
 	{
 		std::string temp = str;
@@ -1758,5 +1773,85 @@ void setFlag(unsigned int &bitField, int flag, bool state)
 			bitmask++;
 		}
 		bitField = bitField & bitmask;
+	}
+}
+
+void openInventory(std::vector<item*> inventory,window &mainWindow)
+{
+	int j = 0;
+	// inventoryFlag = false;
+	SDL_Event event;
+	tile select;
+	select.x = 0;
+	select.y = 0;
+	select.w = 32;
+	select.h = 32;
+	select.texture = load_image("../data/sprites/outline.bmp");
+	timer fps;
+	Uint32 windowColour = SDL_MapRGB(mainWindow.screen->format, 255, 255, 255);
+
+	bool quit(false);
+	while(!quit)
+	{
+		fps.start();
+		while(SDL_PollEvent(&event))
+		{
+			mainWindow.handle_events(event);
+			if(event.type == SDL_QUIT)
+			{
+				exit(0);
+			}
+		}
+
+		Uint8 *keystates = SDL_GetKeyState(NULL);
+		if(keystates[SDLK_q])
+		{quit=true;}
+		else if(keystates[SDLK_UP])
+		{
+			j -= SCREENHEIGHT/(SPRITEHEIGHT*2);
+			select.y -= SPRITEHEIGHT*2;
+			if(select.y<0){select.y+=SPRITEHEIGHT*2;
+				j+=SCREENHEIGHT/(SPRITEHEIGHT*2);}
+		}else if(keystates[SDLK_DOWN])
+		{
+			j += SCREENHEIGHT/(SPRITEHEIGHT*2);
+			select.y += SPRITEHEIGHT*2;
+			if(select.y+select.h>SCREENHEIGHT){select.y-=SPRITEHEIGHT*2;
+				j-=SCREENHEIGHT/(SPRITEHEIGHT*2);}
+		}else if(keystates[SDLK_RIGHT])
+		{
+			j += 1;
+			select.x += SPRITEWIDTH*2;
+			if(select.x+select.w>SCREENWIDTH){select.x-=SPRITEWIDTH*2; j-=1;}
+		}else if(keystates[SDLK_LEFT])
+		{
+			j -= 1;
+			select.x -= SPRITEWIDTH*2;
+			if(select.x<0){select.x+=SPRITEWIDTH*2; j+=1;}
+		}else if(keystates[SDLK_SPACE])
+		{
+			if(inventory[j]->type == itemType::weapon)
+			{}
+		}
+
+		// Rendering Screen
+		//
+		SDL_FillRect(mainWindow.screen, NULL, windowColour);
+		int itemX(0), itemY(0);
+		for(unsigned int i=0;i<inventory.size();i++)
+		{
+			apply_surface(itemX, itemY, inventory[i]->texture[0],
+				   	mainWindow.screen);
+			if(itemX+inventory[i]->w+SPRITEWIDTH > SCREENWIDTH)
+			{itemY += inventory[i]->w + SPRITEWIDTH; itemX = 0;}
+			else{itemX += inventory[i]->w+SPRITEWIDTH;}
+		}
+		apply_surface(select.x, select.y, select.texture, mainWindow.screen);
+		SDL_Flip(mainWindow.screen);
+
+		if(fps.get_ticks() < 1000/12)
+		{
+			SDL_Delay((1000/12) - fps.get_ticks());
+		}	
 	}
 }

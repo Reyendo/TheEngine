@@ -4,6 +4,6 @@
 #include <string>
 
 void returnError();
-void msgBoxInt(int x);
+void msgBoxInt(int);
 
 #endif

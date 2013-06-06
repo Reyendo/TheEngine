@@ -18,19 +18,10 @@ using namespace std;
 #define FRAMESPERSECOND 80
 #define TILEWIDTH 32
 #define TILEHEIGHT 32
-#define SCREENWIDTH 640
+#define SCREENWIDTH 672
 #define SCREENHEIGHT 416
 #define SCREENBPP 32
 #define PLAYERREACH 16
-
-//
-// Possibly will change later.
-//
-// DEFINE ITEM TYPES
-//
-
-#define UNASSIGNED	0
-#define WEAPON		1
 
 
 namespace tileType
@@ -38,7 +29,15 @@ namespace tileType
 	enum{solid, container};
 }
 
-enum textquality{solid, shaded, blended};
+namespace itemType
+{
+	enum{unassigned,weapon};
+}
+
+namespace textType
+{
+	enum textquality{solid, shaded, blended};
+}
 
 
 // CLASS DECLARATION
@@ -269,7 +268,8 @@ class timer
 
 SDL_Surface *load_image(std::string filename);
 TTF_Font *load_font(const char* file, int ptsize);
-SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char fgA, char bgR, char bgG, char bgB, char bgA, const char* text, textquality quality);
+SDL_Surface *drawtext(TTF_Font *fonttodraw, char fgR, char fgG, char fgB, char fgA, char bgR, char bgG, char bgB, char bgA, const char* text, 
+		textType::textquality quality);
 void stringInput(SDL_Event event, std::string &str, int charLimit);
 bool apply_surface(int x, int y, SDL_Surface *&source, SDL_Surface *&dest);
 // bool createSave(std::string saveName, std::string mapName, player &TheOne);
@@ -279,7 +279,7 @@ bool loadSave(std::string saveName, map &world, player &TheOne);
 int collision(thing thingOne, thing thingTwo);
 bool getFlag(unsigned int, int);
 void setFlag(unsigned int&, int, bool);
-
+void openInventory(std::vector<item*> inventory,window &mainWindow);
 
 
 #endif

@@ -42,13 +42,13 @@ bool init(window &mainWindow, player &TheOne, map &world)
 	int phase = 0;
 	int iterator = 0;
 	text1 = drawtext(headerFont,1,1,1,1,0,0,0,1,
-			"New Save", blended);
+			"New Save", textType::blended);
 	text2 = drawtext(headerFont,1,1,1,1,0,0,0,1,
-			"Load Save", blended);
+			"Load Save", textType::blended);
 	text3 = drawtext(coreFont,1,1,1,1,0,0,0,1,
-			"Character Name:", blended);
+			"Character Name:", textType::blended);
 	text4 = drawtext(coreFont,1,1,1,1,0,0,0,1,
-			"Greetings,", blended);
+			"Greetings, ", textType::blended);
 	outline = load_image("../data/sprites/outline2.bmp");
 	if(outline == NULL)
 	{
@@ -129,7 +129,7 @@ bool init(window &mainWindow, player &TheOne, map &world)
 						stringInput(event,userIn,20);
 					}
 					text5 = drawtext(coreFont,1,1,1,1,0,0,0,1,
-							userIn.c_str(),solid);
+							userIn.c_str(),textType::solid);
 					apply_surface(64,(SCREENHEIGHT/2)-64,text3,
 							mainWindow.screen);
 					apply_surface(text3->w+70,(SCREENHEIGHT/2)-64,
@@ -141,11 +141,12 @@ bool init(window &mainWindow, player &TheOne, map &world)
 						phase = 3;
 					}
 					text5 = drawtext(coreFont,1,1,1,1,0,0,0,1,
-							TheOne.name.c_str(),solid);
-					apply_surface(54,(SCREENHEIGHT/2)-(text4->h/2),text4,
+							TheOne.name.c_str(),textType::solid);
+					apply_surface((SCREENWIDTH/2)-((text4->w+text5->w)/2),
+							(SCREENHEIGHT/2)-64,text4,mainWindow.screen);
+					apply_surface((SCREENWIDTH/2)-((text4->w+text5->w)/2)+
+							text4->w,(SCREENHEIGHT/2)-64,text5,
 							mainWindow.screen);
-					apply_surface(text4->w+70,(SCREENHEIGHT/2)-(text5->h/2),
-							text5,mainWindow.screen);
 					break;
 				default:
 					quit = true;

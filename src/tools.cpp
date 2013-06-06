@@ -1,17 +1,16 @@
 #include "tools.hxx"
 
 
-
-#include "os.hxx"
 #include <SDL/SDL.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <stdlib.h>
+#include "os.hxx"
 
 
-#ifdef WINDOWS
+#ifdef OS_WINDOWS
 
 void returnError()
 {
@@ -33,7 +32,7 @@ void msgBoxInt(int x)
 
 #endif
 
-#ifdef LINUX
+#ifdef OS_LINUX
 
 void returnError()
 {
